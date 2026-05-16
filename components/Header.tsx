@@ -15,6 +15,7 @@ export default function Header() {
     { label: 'Upcoming Events', href: '#events' },
     { label: 'Executives', href: '#executives' },
     { label: 'Sponsors', href: '#sponsors' },
+    { label: 'Member Area', href: '/member-area' },
   ]
 
   return (
