@@ -53,7 +53,7 @@ export default function Header() {
               rel="noopener noreferrer"
               className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all font-semibold"
             >
-              Register Now
+              Join Us
             </a>
           </div>
 
@@ -84,7 +84,7 @@ export default function Header() {
               rel="noopener noreferrer"
               className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all font-semibold text-center"
             >
-              Register Now
+              Join Us
             </a>
           </nav>
         )}
