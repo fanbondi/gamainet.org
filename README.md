@@ -1,194 +1,118 @@
-# Next.js Migration of IndabaX Gambia WordPress Theme
+# AI-GAMNET Website
 
-This is a modern, type-safe migration of the IndabaX Gambia event website from WordPress PHP to Next.js with React and TypeScript.
+Artificial Intelligence Gambia Network — a simple **Express + static HTML** site with an inline CMS.
 
-## Why This Approach?
+- Public pages in `public/` (HTML, CSS, JS)
+- **Inline editing** on any page — gear icon, log in, edit text/images, save to MongoDB
+- **Blog** with an Editor.js (WYSIWYG) admin
+- **Programs**: Meetups, IndabaX, and Webinars — each event has speakers, an agenda, and unified attendee registration
+- APIs for members (join), contact, blog, events, and registrations
 
-### ✅ Developer Experience Improvements
+Contact: **info@gamainet.org**
 
-1. **Type Safety**: Full TypeScript support catches errors at compile time
-2. **Component Architecture**: Reusable React components instead of PHP includes
-3. **Modern Tooling**: Hot reload, better debugging, built-in optimization
-4. **Single Styling System**: Tailwind CSS instead of 8+ different CSS files
-5. **Data Management**: Centralized JSON data files instead of hardcoded HTML
-6. **Easy Testing**: Jest, React Testing Library, and Playwright ready
-7. **Large Community**: Tons of documentation and examples
+## Quick start
 
-## Project Structure
-
-```
-nextjs-migration/
-├── app/                      # Next.js App Router
-│   ├── layout.tsx           # Root layout with Header & Footer
-│   ├── page.tsx             # Main landing page
-│   └── globals.css          # Global styles
-├── components/              # Reusable React components
-│   ├── Header.tsx           # Navigation header
-│   ├── Footer.tsx           # Footer
-│   ├── Hero.tsx             # Hero section
-│   ├── EventDetails.tsx     # Event info cards
-│   ├── WhyJoin.tsx          # Benefits section
-│   ├── PersonCard.tsx       # Reusable person card
-│   ├── PersonGrid.tsx       # Grid layout for people
-│   ├── Schedule.tsx         # Event schedule with tabs
-│   └── Sponsors.tsx         # Sponsors gallery
-├── data/                    # Centralized data files
-│   ├── event.ts            # Event info & benefits
-│   ├── people.ts           # Speakers, organizers, volunteers
-│   ├── schedule.ts         # Three-day schedule
-│   └── sponsors.ts         # Sponsor information
-├── package.json            # Dependencies
-├── tsconfig.json           # TypeScript configuration
-├── next.config.js          # Next.js configuration
-└── tailwind.config.js      # Tailwind CSS configuration
-```
-
-## Key Improvements Over PHP Version
-
-### Performance
-- ✅ Automatic code splitting
-- ✅ Image optimization
-- ✅ Static generation where possible
-- ✅ Edge caching support
-
-### Maintainability
-- ✅ Type-safe components with TypeScript
-- ✅ Clear separation of concerns
-- ✅ Reusable component patterns
-- ✅ Centralized data management
-- ✅ Easy to add/update content
-
-### Developer Experience
-- ✅ Hot module replacement (HMR)
-- ✅ Built-in development server
-- ✅ VS Code intellisense
-- ✅ Automatic formatting (ESLint)
-- ✅ Better error messages
-
-### Styling
-- ✅ Consistent Tailwind CSS (instead of multiple CSS files)
-- ✅ No CSS file conflicts
-- ✅ Responsive design built-in
-- ✅ Easy customization via tailwind.config.js
-
-## Getting Started
-
-### Install Dependencies
 ```bash
+cp .env.example .env.local
+# Set MONGODB_URI and ADMIN_PASSWORD in .env.local
+
 npm install
-```
-
-### Development Server
-```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Build for Production
+Open [http://localhost:3000](http://localhost:3000).
+
+> The server reads `.env.local` first, then `.env`. In development it will still start if MongoDB is unavailable (static pages work; the CMS/APIs need MongoDB).
+
+## Logging in as admin
+
+There is **one admin password** (`ADMIN_PASSWORD` in `.env.local`). It unlocks every admin feature below. Two ways to log in:
+
+- **Inline edit** — click the ⚙️ gear icon (bottom-right of any public page) → enter the password.
+- **Admin pages** — open `/admin-blog.html` or `/admin-events.html` and log in there.
+
+---
+
+## How admins add / edit content
+
+### 1. Edit page text & images (inline)
+
+1. Click the ⚙️ gear icon on any page and log in.
+2. Highlighted text becomes editable — click and type.
+3. Hover an image and click **📷 Change Image** to upload/replace it.
+4. Click **Save** in the top toolbar. Changes are stored in MongoDB and shown to all visitors.
+
+Editable text uses `data-key`, images use `data-img-key`, and background images use `data-bg-key` in the HTML.
+
+### 2. Add a blog post — `/admin-blog.html`
+
+Yes, the blog is fully implemented.
+
+1. Go to [`/admin-blog.html`](http://localhost:3000/admin-blog.html) and log in.
+2. Fill in **Title**, **Slug** (auto from title if blank), **Excerpt**, and **Year**.
+3. Write the post in the **Editor.js** WYSIWYG (headings, paragraphs, lists).
+4. Tick **Published** to make it public, then **Save post**.
+5. Posts appear on [`/blog.html`](http://localhost:3000/blog.html); click one to read it at `/blog-post.html?slug=...`.
+
+Use the post list at the bottom to **edit** or **delete** existing posts.
+
+### 3. Add an event (Meetup / IndabaX / Webinar) — `/admin-events.html`
+
+1. Go to [`/admin-events.html`](http://localhost:3000/admin-events.html) and log in.
+2. Click **+ New event** and choose the **Type** (Meetup, IndabaX, or Webinar).
+3. Fill in title, theme, summary, dates, time, location/venue, and upload a **cover image**.
+4. Write the full description in the WYSIWYG editor.
+5. **Speakers** — click *+ Add speaker* for each (name, role, org, topic, bio, photo).
+6. **Agenda** — click *+ Add day*, then *+ Add session* (time / activity / speaker). Add a day per conference day for multi-day IndabaX.
+7. Toggle **Published** (visible on site) and **Registration open**.
+8. **Save event.**
+
+Events show up automatically on the matching page:
+
+- IndabaX → [`/indabax.html`](http://localhost:3000/indabax.html)
+- Meetups → [`/meetups.html`](http://localhost:3000/meetups.html)
+- Webinars → [`/webinars.html`](http://localhost:3000/webinars.html)
+
+Each event has a public detail page at `/event.html?slug=...` with a built-in **registration form**.
+
+### 4. View / export registrations
+
+Open an event in `/admin-events.html` — the **Registrations** card lists everyone who signed up and has an **Export CSV** button.
+
+---
+
+## Seeding example IndabaX editions
+
 ```bash
-npm run build
-npm start
+npm run seed:events
 ```
 
-### Type Check
-```bash
-npm run type-check
+Creates the 2023, 2024, and 2025 IndabaX Gambia editions (idempotent — safe to re-run).
+
+## Structure
+
+```
+server.js              # Express app + route wiring
+public/                # Static site, style.css, editor.js (inline CMS), chrome.js (nav/footer)
+  admin-blog.html/.js  # Blog WYSIWYG admin
+  admin-events.html/.js# Events WYSIWYG admin (speakers, agenda, registrations)
+  event.html/.js       # Public event detail + registration
+src/routes/            # auth, content, upload, members, blog, events, registrations
+src/models/            # Content, Member, BlogPost, Contact, Upload, ProgramEvent, Registration
+src/utils/seed-events.js
 ```
 
-## Deployment Options
+## Environment
 
-### Vercel (Recommended)
-```bash
-npm i -g vercel
-vercel
-```
+| Var | Purpose |
+|-----|---------|
+| `MONGODB_URI` | MongoDB connection string |
+| `ADMIN_PASSWORD` | Admin login password (unlocks all admin features) |
+| `SESSION_SECRET` | Secret for session cookies |
+| `PORT` | Server port (default 3000) |
 
-### Other Platforms
-- Netlify
-- AWS Amplify
-- Docker containers
-- Any Node.js hosting
+## Scripts
 
-## Features
-
-### ✨ Interactive Components
-- Responsive navigation with mobile menu
-- Tab-based schedule selector
-- Smooth scroll navigation
-- Back-to-top button
-- Responsive image gallery
-
-### 🎨 Modern Design
-- Tailwind CSS with custom colors
-- Smooth animations and transitions
-- Mobile-first responsive design
-- Dark mode ready
-- Accessibility features
-
-### 📱 Mobile Optimized
-- Responsive grid layouts
-- Touch-friendly navigation
-- Optimized images
-- Fast page load times
-
-### ♿ Accessibility
-- Semantic HTML
-- ARIA labels
-- Keyboard navigation
-- Image alt text
-- High contrast colors
-
-## Data Updating
-
-All event data is centralized in `/data/` files. To update:
-
-1. **Event Information**: Edit `data/event.ts`
-2. **People (Speakers/Organizers)**: Edit `data/people.ts`
-3. **Schedule**: Edit `data/schedule.ts`
-4. **Sponsors**: Edit `data/sponsors.ts`
-
-No need to touch component files for content changes!
-
-## Adding Images
-
-Place images in `/public/images/` and reference them in data files:
-```typescript
-image: '/images/Ousman-Bah.webp'
-```
-
-## Styling Customization
-
-Edit `tailwind.config.js` to customize:
-- Colors
-- Fonts
-- Spacing
-- Animation timing
-- Breakpoints
-
-## Future Enhancements
-
-- [ ] Dark mode toggle
-- [ ] Multi-language support
-- [ ] Blog section
-- [ ] Registration form validation
-- [ ] Email notifications
-- [ ] Analytics integration
-- [ ] CMS integration (Contentful, Sanity)
-- [ ] Contact form backend
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
-
-## License
-
-Same as original WordPress theme
-
-## Credits
-
-- Original WordPress theme: Indaba-WordPress-Theme
-- Migrated to Next.js for improved maintainability and DX
+- `npm run dev` — dev server with auto-reload (`node --watch`)
+- `npm start` — production
+- `npm run seed:events` — seed example IndabaX editions

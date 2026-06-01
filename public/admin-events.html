@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events Admin — AI-GAMNET</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.31.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@2.0.9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@2.7.6"></script>
+</head>
+<body class="admin-body">
+  <div class="admin-topbar">
+    <a href="/" class="admin-brand"><img src="/images/logo.png" alt="" width="32" height="32" /><strong>AI-GAMNET</strong> · Events admin</a>
+    <div class="admin-topbar-links">
+      <a href="/admin-blog.html">Blog admin</a>
+      <a href="/programs.html">Programs</a>
+      <button id="logout-btn" class="btn-outline" style="display:none;" onclick="adminLogout()">Log out</button>
+    </div>
+  </div>
+
+  <div class="admin-shell">
+    <!-- Login -->
+    <div id="login-box" class="admin-card" style="max-width:420px;margin:3rem auto;">
+      <h2>Admin login</h2>
+      <p style="color:var(--gray-600);margin:0.5rem 0 1rem;">Enter the admin password to manage events.</p>
+      <input type="password" id="admin-pw" placeholder="ADMIN_PASSWORD" onkeydown="if(event.key==='Enter') adminLogin()" />
+      <button class="btn-primary" style="width:100%;margin-top:1rem;" onclick="adminLogin()">Login</button>
+      <p id="login-err" style="color:#EF4444;display:none;margin-top:0.75rem;">Incorrect password.</p>
+    </div>
+
+    <!-- Panel -->
+    <div id="panel" class="admin-grid" style="display:none;">
+      <!-- Left: event list -->
+      <aside class="admin-side">
+        <button class="btn-primary" style="width:100%;" onclick="newEvent()">+ New event</button>
+        <div class="admin-filter">
+          <button class="chip active" data-filter="all" onclick="filterList('all', this)">All</button>
+          <button class="chip" data-filter="indabax" onclick="filterList('indabax', this)">IndabaX</button>
+          <button class="chip" data-filter="meetup" onclick="filterList('meetup', this)">Meetups</button>
+          <button class="chip" data-filter="webinar" onclick="filterList('webinar', this)">Webinars</button>
+        </div>
+        <ul id="event-list" class="admin-list"></ul>
+      </aside>
+
+      <!-- Right: editor form -->
+      <main class="admin-main">
+        <div class="admin-card">
+          <div class="form-row">
+            <label>Type
+              <select id="ev-type">
+                <option value="meetup">Meetup</option>
+                <option value="indabax">IndabaX (conference)</option>
+                <option value="webinar">Webinar</option>
+              </select>
+            </label>
+            <label>Year
+              <input type="number" id="ev-year" placeholder="2025" />
+            </label>
+          </div>
+          <label>Title
+            <input id="ev-title" placeholder="e.g. Deep Learning IndabaX Gambia 2025" />
+          </label>
+          <label>Slug (optional)
+            <input id="ev-slug" placeholder="auto-generated from title" />
+          </label>
+          <label>Theme / tagline
+            <input id="ev-theme" placeholder="e.g. AI in Education" />
+          </label>
+          <label>Summary (short, shown on cards)
+            <textarea id="ev-summary" rows="2" placeholder="One or two sentences"></textarea>
+          </label>
+
+          <div class="form-row">
+            <label>Start date <input type="date" id="ev-start" /></label>
+            <label>End date <input type="date" id="ev-end" /></label>
+          </div>
+          <div class="form-row">
+            <label>Time info <input id="ev-time" placeholder="e.g. 08:30 – 17:00" /></label>
+            <label>Location <input id="ev-location" placeholder="e.g. Kanifing, The Gambia" /></label>
+          </div>
+          <label>Venue
+            <input id="ev-venue" placeholder="e.g. University of The Gambia, Peace Building" />
+          </label>
+
+          <label>Cover image
+            <div class="img-field">
+              <input id="ev-cover" placeholder="/uploads/... or paste URL" />
+              <input type="file" id="ev-cover-file" accept="image/*" onchange="uploadCover(this)" />
+            </div>
+            <div id="ev-cover-preview" class="img-preview"></div>
+          </label>
+        </div>
+
+        <div class="admin-card">
+          <h3>Full description</h3>
+          <p class="hint">Rich text — headings, paragraphs, lists, quotes.</p>
+          <div id="editorjs" class="editor-holder"></div>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-head">
+            <h3>Speakers</h3>
+            <button class="btn-outline btn-sm" onclick="addSpeaker()">+ Add speaker</button>
+          </div>
+          <div id="speakers"></div>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-head">
+            <h3>Agenda / schedule</h3>
+            <button class="btn-outline btn-sm" onclick="addDay()">+ Add day</button>
+          </div>
+          <p class="hint">For multi-day IndabaX add a day per conference day; for meetups/webinars one day is fine.</p>
+          <div id="agenda"></div>
+        </div>
+
+        <div class="admin-card">
+          <div class="form-row">
+            <label class="check"><input type="checkbox" id="ev-regopen" checked /> Registration open</label>
+            <label class="check"><input type="checkbox" id="ev-published" /> Published (visible on site)</label>
+            <label class="check"><input type="checkbox" id="ev-featured" /> Featured</label>
+          </div>
+          <label>External registration URL (optional — overrides internal form)
+            <input id="ev-extreg" placeholder="https://..." />
+          </label>
+          <div class="form-actions">
+            <button class="btn-primary" onclick="saveEvent()">Save event</button>
+            <button class="btn-outline" onclick="newEvent()">Clear / new</button>
+            <span id="save-msg" class="save-msg"></span>
+          </div>
+        </div>
+
+        <div class="admin-card" id="reg-card" style="display:none;">
+          <div class="card-head">
+            <h3>Registrations (<span id="reg-count">0</span>)</h3>
+            <button class="btn-outline btn-sm" onclick="exportRegistrations()">Export CSV</button>
+          </div>
+          <div id="reg-list" class="reg-list"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/admin-events.js"></script>
+</body>
+</html>

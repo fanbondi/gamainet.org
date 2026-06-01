@@ -188,17 +188,85 @@ theme: {
 ### Customize Spacing
 Edit `tailwind.config.js` for all spacing globally.
 
-## Environment Variables (Optional)
+## Environment Variables
 
-Create `.env.local`:
-```
-NEXT_PUBLIC_API_URL=https://api.example.com
+Copy the example file and fill in your values:
+
+```bash
+cp .env.local.example .env.local
 ```
 
-Access in components:
-```typescript
-const api = process.env.NEXT_PUBLIC_API_URL
+`.env.local` is git-ignored. Never commit real secrets.
+
+| Variable | Purpose |
+|---|---|
+| `MONGODB_URI` | Connection string for MongoDB |
+| `ADMIN_SECRET` | Shared secret protecting admin save endpoints (demo only — not for production) |
+
+## Running MongoDB locally
+
+The quickest way to run MongoDB on your laptop is with Docker:
+
+```bash
+docker run -d --name aigamnet-mongo -p 27017:27017 mongo:7
 ```
+
+This starts MongoDB on the default port. Stop it with `docker stop aigamnet-mongo` and restart it later with `docker start aigamnet-mongo`. Use `mongodb://localhost:27017/aigamnet` as your `MONGODB_URI` in `.env.local`.
+
+If you do not have Docker, [MongoDB Community Edition](https://www.mongodb.com/try/download/community) can be installed directly, or you can create a free shared cluster on [MongoDB Atlas](https://www.mongodb.com/atlas) and use the connection string it provides.
+
+## Testing the API endpoints
+
+Make sure `npm run dev` is running and MongoDB is up, then copy-paste any of the commands below.
+
+### Check database health
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+Expected when connected: `{"status":"ok","db":"connected"}`
+
+### Register a new member (minimal)
+
+```bash
+curl -s -X POST http://localhost:3000/api/members \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Fatou Jallow","email":"fatou@example.com"}' | jq .
+```
+
+### Register a new member (all fields)
+
+```bash
+curl -s -X POST http://localhost:3000/api/members \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Fatou Jallow",
+    "email": "fatou@example.com",
+    "organisation": "University of The Gambia",
+    "role": "Researcher",
+    "interests": "Computer vision and agricultural AI"
+  }' | jq .
+```
+
+Expected on success (201): `{"success":true,"message":"Welcome to AI-GAMNET! You are now registered."}`
+
+### Validation failure — missing name
+
+```bash
+curl -s -X POST http://localhost:3000/api/members \
+  -H "Content-Type: application/json" \
+  -d '{"email":"fatou@example.com"}' | jq .
+```
+
+Expected (400): `{"success":false,"errors":{"name":["Required"]}}`
+
+### Duplicate email
+
+Send the same request a second time; expected (409):
+`{"success":false,"message":"That email address is already registered."}`
+
+> `jq` is optional — omit `| jq .` if it is not installed.
 
 ## Building for Production
 

@@ -1,0 +1,18 @@
+Homepage photos from Pexels (free to use).
+https://www.pexels.com/license/
+
+African & community-focused selections for AI-GAMNET:
+
+- hero-primary.jpg — Pexels 3861969
+- african-students-learning.jpg — Pexels 1181676
+- african-innovation.jpg — Pexels 7688336
+- african-youth-coding.jpg — Pexels 1181244
+- african-workshop.jpg — Pexels 7550584
+- african-team-meeting.jpg — Pexels 7579831
+- african-collaboration.jpg — Pexels 6476589
+- african-woman-tech.jpg — Pexels 7946662
+- african-classroom.jpg — Pexels 5905447
+- african-researcher.jpg — Pexels 5327585
+- african-data-work.jpg — Pexels 3184292
+
+Legacy files (may be removed): hero-collaboration.jpg, conference.jpg, etc.

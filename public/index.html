@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI-GAMNET — Gambia's AI Community</title>
+  <meta name="description" content="AI-GAMNET connects researchers, professionals, and students advancing AI across Gambia and Africa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+  <div id="editor-toolbar" class="editor-toolbar" style="display:none;">
+    <div class="editor-toolbar-inner">
+      <span class="editor-label">Edit mode — click text or images to edit</span>
+      <div class="editor-actions">
+        <button id="save-btn" onclick="saveContent()">Save</button>
+        <button id="exit-btn" onclick="exitEditMode()">Exit</button>
+      </div>
+    </div>
+  </div>
+  <button id="admin-trigger" class="admin-trigger" onclick="enterEditMode()" title="Edit site">⚙️</button>
+  <div id="login-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h2>Admin login</h2>
+      <p>Enter your admin password to edit this site.</p>
+      <input type="password" id="admin-password" placeholder="Password" onkeydown="if(event.key==='Enter') checkLogin()" />
+      <div class="modal-actions">
+        <button onclick="checkLogin()">Login</button>
+        <button class="cancel" onclick="document.getElementById('login-modal').style.display='none'">Cancel</button>
+      </div>
+      <p id="login-error" style="color:#EF4444;display:none;">Incorrect password.</p>
+    </div>
+  </div>
+
+  <div id="site-header"></div>
+
+  <section class="hero-pro" id="hero">
+    <div class="container hero-pro-grid">
+      <div>
+        <span class="hero-eyebrow editable" data-key="hero-badge">★ Gambia &amp; Africa AI Network</span>
+        <h1 class="editable" data-key="hero-title">Advancing AI,<br/><span class="grad">Empowering Society</span></h1>
+        <p class="hero-pro-lead editable" data-key="hero-sub">AI-GAMNET connects researchers, innovators, and students to build ethical, world-class AI across health, agriculture, education, and governance in The Gambia and across Africa.</p>
+        <div class="hero-pro-actions">
+          <a href="/join.html" class="btn-primary btn-lg">Join the Network</a>
+          <a href="/programs.html" class="btn-outline btn-lg">Explore Programs</a>
+        </div>
+        <div class="hero-pro-meta">
+          <div><span class="num editable" data-key="stat-members">70+</span><span class="lbl">Members</span></div>
+          <div><span class="num editable" data-key="stat-speakers">12+</span><span class="lbl">Speakers</span></div>
+          <div><span class="num editable" data-key="stat-founded">2023</span><span class="lbl">Founded</span></div>
+          <div><span class="num editable" data-key="stat-reach">Pan-African</span><span class="lbl">Reach</span></div>
+        </div>
+      </div>
+      <div class="hero-pro-media">
+        <img src="/images/home/hero-feature.jpg" alt="AI-GAMNET community presenting machine learning work" data-img-key="hero-primary" />
+        <div class="float-card">
+          <div class="dot">🚀</div>
+          <div><strong>IndabaX Gambia</strong><span>Flagship AI conference</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-strip">
+    <div class="container">
+      <p class="trust-label">Partners &amp; collaborators</p>
+      <div class="trust-logos">
+        <img src="/images/partners/deeplearningindaba.png" alt="Deep Learning Indaba" />
+        <img src="/images/partners/indabax.png" alt="IndabaX" />
+        <img src="/images/partners/mrc_21.png" alt="MRC Unit The Gambia" />
+        <img src="/images/partners/itca.png" alt="ITCA" />
+        <img src="/images/partners/lasting.png" alt="Lasting" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow eyebrow-center">What we do</p>
+        <h2 class="section-title editable" data-key="explore-title">A community built for impact</h2>
+        <p class="section-sub">From flagship conferences to local meetups, we create the connections and skills that move African AI forward.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-ic">🎤</div>
+          <h3 class="editable" data-key="feat1-title">Conferences &amp; IndabaX</h3>
+          <p class="editable" data-key="feat1-body">Our flagship Deep Learning IndabaX brings together experts, researchers, and students for talks, hands-on labs, and networking.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-ic">👥</div>
+          <h3 class="editable" data-key="feat2-title">Meetups &amp; Webinars</h3>
+          <p class="editable" data-key="feat2-body">Monthly in-person meetups and online webinars with researchers and industry guests on applied ML and careers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-ic">🔬</div>
+          <h3 class="editable" data-key="feat3-title">Research &amp; Capacity</h3>
+          <p class="editable" data-key="feat3-body">Building national capacity in agriculture, health, education, and governance through collaboration and mentorship.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--white);">
+    <div class="container">
+      <div class="media-row">
+        <img src="/images/home/feature-conference.jpg" alt="IndabaX Gambia conference" data-img-key="why-img-1" />
+        <div class="media-row-text">
+          <p class="section-eyebrow">Why join</p>
+          <h2 class="editable" data-key="why-title">Build skills. Share research. Grow together.</h2>
+          <p class="editable" data-key="why-p1">AI-GAMNET is where Gambian and pan-African talent connects with world-class learning, mentorship, and opportunity.</p>
+          <ul class="check-list">
+            <li class="editable" data-key="why-li1">Hands-on workshops and deep learning labs</li>
+            <li class="editable" data-key="why-li2">Mentorship from researchers and practitioners</li>
+            <li class="editable" data-key="why-li3">A growing network across the continent</li>
+          </ul>
+          <a href="/join.html" class="btn-primary">Become a member</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact-band">
+    <div class="container">
+      <div class="impact-grid">
+        <div><div class="num editable" data-key="imp1-num">70<span>+</span></div><div class="lbl editable" data-key="imp1-lbl">Active members</div></div>
+        <div><div class="num editable" data-key="imp2-num">12<span>+</span></div><div class="lbl editable" data-key="imp2-lbl">Expert speakers</div></div>
+        <div><div class="num editable" data-key="imp3-num">4</div><div class="lbl editable" data-key="imp3-lbl">Focus sectors</div></div>
+        <div><div class="num editable" data-key="imp4-num">2023</div><div class="lbl editable" data-key="imp4-lbl">Founded</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow eyebrow-center">Explore</p>
+        <h2 class="section-title editable" data-key="hub-title">Where to start</h2>
+      </div>
+      <div class="hub-grid">
+        <a href="/programs.html" class="hub-card">
+          <img src="/images/home/african-workshop.jpg" alt="IndabaX and programs" data-img-key="hub-programs" />
+          <div class="hub-card-body">
+            <h3 class="editable" data-key="hub1-title">Programs &amp; Events</h3>
+            <p class="editable" data-key="hub1-body">IndabaX, local meetups, and monthly webinars across The Gambia.</p>
+          </div>
+        </a>
+        <a href="/ai-in-gambia.html" class="hub-card">
+          <img src="/images/home/african-classroom.jpg" alt="AI in Gambia" data-img-key="hub-gambia" />
+          <div class="hub-card-body">
+            <h3 class="editable" data-key="hub2-title">AI in Gambia</h3>
+            <p class="editable" data-key="hub2-body">National capacity in agriculture, health, education, and public sector.</p>
+          </div>
+        </a>
+        <a href="/about.html" class="hub-card">
+          <img src="/images/home/african-team-meeting.jpg" alt="About AI-GAMNET" data-img-key="hub-about" />
+          <div class="hub-card-body">
+            <h3 class="editable" data-key="hub3-title">About AI-GAMNET</h3>
+            <p class="editable" data-key="hub3-body">Our mission to build sustainable AI expertise through research and collaboration.</p>
+          </div>
+        </a>
+        <a href="/blog.html" class="hub-card">
+          <img src="/images/home/african-collaboration.jpg" alt="Blog and news" data-img-key="hub-blog" />
+          <div class="hub-card-body">
+            <h3 class="editable" data-key="hub4-title">News &amp; Blog</h3>
+            <p class="editable" data-key="hub4-body">Updates, write-ups, and stories from the AI-GAMNET community.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--off-white);">
+    <div class="container">
+      <div class="quote-card">
+        <div class="mark">“</div>
+        <blockquote class="editable" data-key="quote-text">AI-GAMNET gave me my first real community in machine learning — the mentorship and the IndabaX experience completely changed my trajectory.</blockquote>
+        <div class="quote-author">
+          <img src="/images/home/african-woman-tech.jpg" alt="Community member" data-img-key="quote-avatar" />
+          <div>
+            <strong class="editable" data-key="quote-name">Community Member</strong>
+            <span class="editable" data-key="quote-role">AI-GAMNET, The Gambia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner" data-bg-key="cta-bg">
+    <div class="container">
+      <h2 class="editable" data-key="cta-title">Ready to shape the future of AI in Africa?</h2>
+      <p class="editable" data-key="cta-sub">Join a growing network of researchers, students, and professionals advancing ethical AI across the continent.</p>
+      <div class="cta-actions">
+        <a href="/join.html" class="btn-primary btn-lg">Join AI-GAMNET</a>
+        <a href="/contact.html" class="btn-ghost">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+
+  <script src="/chrome.js"></script>
+  <script src="/editor.js"></script>
+  <script src="/main.js"></script>
+</body>
+</html>

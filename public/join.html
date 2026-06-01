@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join — AI-GAMNET</title>
+  <meta name="description" content="Join AI-GAMNET — researchers, students, and practitioners welcome." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <header class="page-hero-img" data-bg-key="join-hero-bg">
+    <div class="container">
+      <h1>Join the Network</h1>
+      <p>Researchers, students, and practitioners welcome — become part of Gambia's AI community.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;max-width:1000px;">
+      <div>
+        <p class="section-eyebrow">Membership</p>
+        <h2 style="font-family:var(--font-heading);font-weight:900;font-size:1.9rem;color:var(--accent-dark);line-height:1.15;margin-bottom:1rem;">Why become a member?</h2>
+        <ul class="check-list">
+          <li>Access to IndabaX, meetups, and webinars</li>
+          <li>Mentorship and learning resources</li>
+          <li>A growing pan-African professional network</li>
+          <li>Opportunities to contribute and lead</li>
+        </ul>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow);">
+        <form id="join-form" class="contact-form" onsubmit="submitJoin(event)">
+          <div class="form-group"><input type="text" id="join-name" placeholder="Full name" required /></div>
+          <div class="form-group"><input type="email" id="join-email" placeholder="Email" required /></div>
+          <div class="form-group"><input type="text" id="join-org" placeholder="Organisation (optional)" /></div>
+          <div class="form-group"><input type="text" id="join-role" placeholder="Role (optional)" /></div>
+          <div class="form-group"><textarea id="join-interests" rows="3" placeholder="Interests (optional)"></textarea></div>
+          <button type="submit" class="btn-form">Join AI-GAMNET</button>
+          <p id="join-success" style="display:none;color:#10B981;margin-top:1rem;text-align:center;">Welcome to AI-GAMNET!</p>
+          <p id="join-error" style="display:none;color:#EF4444;margin-top:1rem;text-align:center;"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+  <script src="/chrome.js"></script>
+  <script src="/main.js"></script>
+</body>
+</html>

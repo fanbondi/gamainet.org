@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Admin — AI-GAMNET</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.31.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@2.0.9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.7"></script>
+  <style>
+    .admin-wrap { max-width: 900px; margin: 2rem auto; padding: 0 1rem 4rem; }
+  </style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <h1>Blog admin</h1>
+    <p style="margin:1rem 0;color:var(--gray-600);"><a href="/blog.html">← Public blog</a> · <a href="/">Home</a></p>
+
+    <div id="login-box" style="margin:2rem 0;padding:1.5rem;border:1px solid var(--gray-200);border-radius:12px;">
+      <h2>Login</h2>
+      <input type="password" id="admin-pw" placeholder="ADMIN_PASSWORD" style="width:100%;padding:0.75rem;margin:1rem 0;border:1px solid var(--gray-200);border-radius:8px;" />
+      <button class="btn-primary" onclick="adminLogin()">Login</button>
+      <p id="login-err" style="color:#EF4444;display:none;margin-top:0.5rem;">Login failed</p>
+    </div>
+
+    <div id="editor-panel" style="display:none;">
+      <label>Title <input id="post-title" style="width:100%;padding:0.5rem;margin:0.5rem 0 1rem;border:1px solid var(--gray-200);border-radius:8px;" /></label>
+      <label>Slug <input id="post-slug" style="width:100%;padding:0.5rem;margin:0.5rem 0 1rem;border:1px solid var(--gray-200);border-radius:8px;" /></label>
+      <label>Excerpt <textarea id="post-excerpt" rows="2" style="width:100%;padding:0.5rem;margin:0.5rem 0 1rem;border:1px solid var(--gray-200);border-radius:8px;"></textarea></label>
+      <label>Year <input type="number" id="post-year" value="2026" style="width:120px;padding:0.5rem;margin:0.5rem 0 1rem;border:1px solid var(--gray-200);border-radius:8px;" /></label>
+      <label><input type="checkbox" id="post-published" checked /> Published</label>
+      <div id="editorjs" style="border:1px solid var(--gray-200);border-radius:12px;padding:1rem;margin:1.5rem 0;min-height:280px;"></div>
+      <button class="btn-primary" onclick="savePost()">Save post</button>
+      <button class="btn-outline" style="margin-left:0.5rem;" onclick="newPost()">New</button>
+      <p id="save-msg" style="margin-top:1rem;"></p>
+      <h3 style="margin-top:2rem;">Posts</h3>
+      <ul id="post-list" style="margin-top:1rem;"></ul>
+    </div>
+  </div>
+  <script src="/admin-blog.js"></script>
+</body>
+</html>

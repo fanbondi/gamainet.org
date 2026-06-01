@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — AI-GAMNET</title>
+  <meta name="description" content="AI-GAMNET builds a sustainable pan-African community of AI expertise through research, innovation, and collaboration." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="editor-toolbar" class="editor-toolbar" style="display:none;"><div class="editor-toolbar-inner"><span class="editor-label">Edit mode</span><div class="editor-actions"><button id="save-btn" onclick="saveContent()">Save</button><button id="exit-btn" onclick="exitEditMode()">Exit</button></div></div></div>
+  <button id="admin-trigger" class="admin-trigger" onclick="enterEditMode()">⚙️</button>
+  <div id="login-modal" class="modal-overlay" style="display:none;"><div class="modal-box"><h2>Admin login</h2><input type="password" id="admin-password" onkeydown="if(event.key==='Enter') checkLogin()" /><div class="modal-actions"><button onclick="checkLogin()">Login</button><button class="cancel" onclick="document.getElementById('login-modal').style.display='none'">Cancel</button></div><p id="login-error" style="color:#EF4444;display:none;">Incorrect password.</p></div></div>
+
+  <div id="site-header"></div>
+
+  <header class="page-hero-img" data-bg-key="about-hero-bg">
+    <div class="container">
+      <h1 class="editable" data-key="about-hero-title">About AI-GAMNET</h1>
+      <p class="editable" data-key="about-hero-sub">Building a sustainable pan-African community of AI expertise through research, innovation, and collaboration.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="media-row">
+        <img src="/images/home/hero-feature.jpg" alt="AI-GAMNET community" data-img-key="about-img-1" />
+        <div class="media-row-text">
+          <p class="section-eyebrow">Our mission</p>
+          <h2 class="editable" data-key="about-mission-title">Advancing AI for Gambian and African development</h2>
+          <p class="editable" data-key="about-p1">AI-GAMNET conducts flagship events including Deep Learning IndabaX Gambia — locally organised conferences that bring together experts, researchers, professionals, and students to discuss the latest in AI and machine learning.</p>
+          <p class="editable" data-key="about-p2">We strengthen our community and build capacity in fields that matter for Gambian development — from agriculture and health to education and governance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--white);">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow eyebrow-center">What drives us</p>
+        <h2 class="section-title editable" data-key="about-values-title">Our values</h2>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-ic">🌍</div>
+          <h3 class="editable" data-key="val1-title">Local impact</h3>
+          <p class="editable" data-key="val1-body">We focus AI on the sectors that matter most for The Gambia and the continent.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-ic">🤝</div>
+          <h3 class="editable" data-key="val2-title">Open community</h3>
+          <p class="editable" data-key="val2-body">Researchers, students, and professionals learning and building together.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-ic">⚖️</div>
+          <h3 class="editable" data-key="val3-title">Ethical AI</h3>
+          <p class="editable" data-key="val3-body">Responsible, inclusive, and human-centred approaches to technology.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact-band">
+    <div class="container">
+      <div class="impact-grid">
+        <div><div class="num editable" data-key="about-imp1-num">70<span>+</span></div><div class="lbl editable" data-key="about-imp1-lbl">Members</div></div>
+        <div><div class="num editable" data-key="about-imp2-num">12<span>+</span></div><div class="lbl editable" data-key="about-imp2-lbl">Speakers</div></div>
+        <div><div class="num editable" data-key="about-imp3-num">4</div><div class="lbl editable" data-key="about-imp3-lbl">Focus sectors</div></div>
+        <div><div class="num editable" data-key="about-imp4-num">2023</div><div class="lbl editable" data-key="about-imp4-lbl">Founded</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner" data-bg-key="about-cta-bg">
+    <div class="container">
+      <h2 class="editable" data-key="about-cta-title">Join our community</h2>
+      <p class="editable" data-key="about-cta-sub">Be part of a growing pan-African network advancing ethical AI.</p>
+      <div class="cta-actions">
+        <a href="/join.html" class="btn-primary btn-lg">Become a member</a>
+        <a href="/programs.html" class="btn-ghost">See our programs</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+  <script src="/chrome.js"></script>
+  <script src="/editor.js"></script>
+  <script src="/main.js"></script>
+</body>
+</html>
