@@ -1,5 +1,5 @@
 /**
- * Seed initial IndabaX editions. Idempotent — upserts by slug.
+ * Seed program events (webinars, IndabaX). Idempotent — upserts by slug.
  * Run: npm run seed:events
  */
 const fs = require('fs');
@@ -13,6 +13,83 @@ const ProgramEvent = require('../models/ProgramEvent');
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/aigamnet';
 
 const events = [
+  {
+    type: 'webinar',
+    title: 'Building Automated AI Chatbots for Businesses and Government Agencies',
+    slug: 'ai-chatbots-businesses-government-webinar',
+    theme: 'Smarter customer service starts here, live demo included',
+    summary:
+      'Learn how to deploy AI-powered chatbots for your business or agency, handle customer enquiries 24/7, and watch a live build demo. Free and open to all.',
+    coverImage: '/images/home/online-webinar.jpg',
+    location: 'Online',
+    venue: 'Zoom',
+    startDate: new Date('2026-07-17'),
+    endDate: new Date('2026-07-17'),
+    timeInfo: '11:00 – 12:00 GMT',
+    year: 2026,
+    published: true,
+    featured: true,
+    registrationOpen: true,
+    description: {
+      blocks: [
+        {
+          type: 'paragraph',
+          data: {
+            text: 'Customer care is the frontline of every business and government service, yet most organisations in The Gambia are still handling enquiries manually, one call or message at a time. This webinar changes that.',
+          },
+        },
+        {
+          type: 'paragraph',
+          data: {
+            text: 'Organised by Gamainet.org, this session introduces business owners, customer service managers, and government agency staff to the practical world of AI chatbots: what they are, how they work, and how they can be deployed to handle customer enquiries, appointment bookings, product questions, complaint logging, and more, around the clock and without extra staffing costs.',
+          },
+        },
+        {
+          type: 'paragraph',
+          data: {
+            text: 'We cover the core concepts in plain language, walk through real-world use cases relevant to Gambian businesses and public services, and close with a live demo showing exactly how an AI chatbot can be built and launched for your organisation.',
+          },
+        },
+        { type: 'header', data: { text: 'What you will learn', level: 2 } },
+        {
+          type: 'list',
+          data: {
+            style: 'unordered',
+            items: [
+              'What AI chatbots are and how they differ from traditional automated replies',
+              'How businesses and government agencies across Africa are already using them to cut response times and improve service',
+              'Which platforms and tools make deployment accessible without technical expertise',
+              'How to plan a chatbot for your specific use case',
+              'What to expect in terms of costs and timelines',
+            ],
+          },
+        },
+        {
+          type: 'paragraph',
+          data: {
+            text: 'Whether you run a shop, a financial service, a hospital, a school, or a government office, this session will show you what is possible and how to get started.',
+          },
+        },
+        {
+          type: 'paragraph',
+          data: {
+            text: 'Free and open to all. Delivered in English and designed for participants with no prior technical background.',
+          },
+        },
+      ],
+    },
+    speakers: [
+      {
+        name: 'AI-GAMNET Team',
+        role: 'Presenter',
+        org: 'Gamainet.org',
+        topic: 'Building Automated AI Chatbots — live demo',
+        photo: '/images/home/african-researcher.jpg',
+        bio: 'Practical AI for businesses and public services in The Gambia.',
+      },
+    ],
+    agenda: [],
+  },
   {
     type: 'indabax',
     title: 'Deep Learning IndabaX Gambia 2025',
