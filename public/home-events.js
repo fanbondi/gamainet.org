@@ -76,7 +76,6 @@ async function loadHomeEvents() {
 
     if (!events.length) {
       if (section) section.style.display = 'none';
-      if (spotlight) spotlight.innerHTML = '';
       return;
     }
 
