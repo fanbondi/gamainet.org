@@ -105,7 +105,7 @@ function registrationBlock(ev) {
       <div class="container" style="max-width:600px;">
         <div class="section-header"><p class="section-eyebrow eyebrow-center">Attend</p><h2 class="section-title">Register for this event</h2></div>
         <div class="reg-form-card">
-          <form id="reg-form" class="contact-form" onsubmit="submitRegistration(event)">
+          <form id="reg-form" class="contact-form">
             <div class="form-group"><input type="text" id="reg-name" required placeholder="Full name" /></div>
             <div class="form-group"><input type="email" id="reg-email" required placeholder="Email" /></div>
             <div class="form-group"><input type="text" id="reg-org" placeholder="Organisation (optional)" /></div>
@@ -120,15 +120,32 @@ function registrationBlock(ev) {
     </section>`;
 }
 
+function bindRegistrationForm() {
+  const form = document.getElementById('reg-form');
+  if (!form || form.dataset.bound === '1') return;
+  form.dataset.bound = '1';
+  form.addEventListener('submit', submitRegistration);
+}
+
 async function submitRegistration(e) {
   e.preventDefault();
+  const form = e.currentTarget || e.target;
   const ok = document.getElementById('reg-success');
   const err = document.getElementById('reg-error');
   ok.style.display = 'none';
   err.style.display = 'none';
-  const btn = e.target.querySelector('button[type="submit"]');
-  btn.disabled = true;
-  btn.textContent = 'Registering…';
+
+  if (!CURRENT_EVENT?._id) {
+    err.textContent = 'Event not loaded. Please refresh the page and try again.';
+    err.style.display = 'block';
+    return;
+  }
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Registering…';
+  }
   try {
     const res = await fetch('/api/registrations', {
       method: 'POST',
@@ -142,17 +159,24 @@ async function submitRegistration(e) {
         phone: document.getElementById('reg-phone').value.trim(),
       }),
     });
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error('Server error. Please try again in a moment.');
+    }
     if (!res.ok || !data.success) throw new Error(data.message || 'Registration failed.');
     ok.textContent = data.message;
     ok.style.display = 'block';
-    e.target.reset();
+    form.reset();
   } catch (e2) {
-    err.textContent = e2.message;
+    err.textContent = e2.message || 'Something went wrong. Please try again.';
     err.style.display = 'block';
   } finally {
-    btn.disabled = false;
-    btn.textContent = 'Register';
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Register';
+    }
   }
 }
 
@@ -223,6 +247,8 @@ async function loadEvent() {
 
       ${registrationBlock(ev)}
     `;
+
+    bindRegistrationForm();
 
     if (location.hash) {
       const t = document.querySelector(location.hash);

@@ -35,28 +35,69 @@ async function showPanel() {
   document.getElementById('login-box').style.display = 'none';
   document.getElementById('panel').style.display = 'grid';
   document.getElementById('logout-btn').style.display = 'inline-block';
-  await initEditor();
   await loadList();
-  newEvent();
+  await newEvent();
 }
 
 // ---------- Editor.js ----------
+function resetEditorHolder() {
+  const current = document.getElementById('editorjs');
+  if (!current) return;
+  const fresh = document.createElement('div');
+  fresh.id = 'editorjs';
+  fresh.className = 'editor-holder';
+  current.replaceWith(fresh);
+}
+
+function setEditorStatus(message, isError) {
+  const el = document.getElementById('editor-status');
+  if (!el) return;
+  el.textContent = message || '';
+  el.style.color = isError ? '#EF4444' : 'var(--gray-600)';
+}
+
+function getEditorTools() {
+  const missing = [];
+  if (!window.EditorJS) missing.push('EditorJS');
+  if (!window.Header) missing.push('Header');
+  if (!window.Paragraph) missing.push('Paragraph');
+  const ListTool = window.List || window.EditorjsList;
+  if (!ListTool) missing.push('List');
+  if (!window.Quote) missing.push('Quote');
+  if (missing.length) {
+    throw new Error(`Editor tools failed to load (${missing.join(', ')}). Hard-refresh the page or disable ad blockers.`);
+  }
+  return {
+    header: { class: window.Header, config: { levels: [2, 3], defaultLevel: 2 } },
+    list: { class: ListTool, inlineToolbar: true },
+    paragraph: { class: window.Paragraph, inlineToolbar: true },
+    quote: { class: window.Quote, inlineToolbar: true },
+  };
+}
+
 async function initEditor(data) {
+  setEditorStatus('Loading editor…', false);
   if (editor) {
-    try { await editor.destroy(); } catch (e) {}
+    try {
+      await editor.destroy();
+    } catch (e) {}
     editor = null;
   }
-  editor = new EditorJS({
-    holder: 'editorjs',
-    data: data || { blocks: [{ type: 'paragraph', data: { text: '' } }] },
-    tools: {
-      header: { class: Header, config: { levels: [2, 3], defaultLevel: 2 } },
-      list: { class: List, inlineToolbar: true },
-      paragraph: { class: Paragraph, inlineToolbar: true },
-      quote: { class: Quote, inlineToolbar: true },
-    },
-  });
-  await editor.isReady;
+  resetEditorHolder();
+  try {
+    editor = new EditorJS({
+      holder: 'editorjs',
+      data: data || { blocks: [{ type: 'paragraph', data: { text: '' } }] },
+      tools: getEditorTools(),
+      placeholder: 'Write the full event description here…',
+    });
+    await editor.isReady;
+    setEditorStatus('', false);
+  } catch (err) {
+    console.error('initEditor failed:', err);
+    setEditorStatus(err.message || 'Editor failed to load.', true);
+    editor = null;
+  }
 }
 
 // ---------- Cover upload ----------
@@ -223,7 +264,7 @@ function dateInput(d) {
   return new Date(d).toISOString().slice(0, 10);
 }
 
-function newEvent() {
+async function newEvent() {
   editingId = null;
   document.getElementById('ev-type').value = 'meetup';
   document.getElementById('ev-year').value = new Date().getFullYear();
@@ -236,7 +277,7 @@ function newEvent() {
   renderCoverPreview('');
   document.getElementById('reg-card').style.display = 'none';
   document.getElementById('save-msg').textContent = '';
-  initEditor();
+  await initEditor();
   renderList();
 }
 
@@ -274,7 +315,23 @@ async function editEvent(id) {
 }
 
 async function saveEvent() {
-  const description = await editor.save();
+  const msg = document.getElementById('save-msg');
+  if (!editor) {
+    msg.textContent = 'Editor still loading — wait a moment and try again.';
+    msg.className = 'save-msg err';
+    return;
+  }
+
+  let description;
+  try {
+    description = await editor.save();
+  } catch (err) {
+    console.error('Editor save failed:', err);
+    msg.textContent = 'Could not save description. Wait for the editor to load, then try again.';
+    msg.className = 'save-msg err';
+    return;
+  }
+
   const body = {
     type: document.getElementById('ev-type').value,
     year: document.getElementById('ev-year').value || undefined,
@@ -297,7 +354,6 @@ async function saveEvent() {
     description,
   };
 
-  const msg = document.getElementById('save-msg');
   if (!body.title) {
     msg.textContent = 'Title is required.';
     msg.className = 'save-msg err';
@@ -306,25 +362,31 @@ async function saveEvent() {
 
   const url = editingId ? `/api/events/${editingId}` : '/api/events';
   const method = editingId ? 'PUT' : 'POST';
-  const res = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  if (data.success) {
-    msg.textContent = 'Saved.';
-    msg.className = 'save-msg ok';
-    if (!editingId && data.event?._id) editingId = data.event._id;
-    await loadList();
-    renderList();
-    if (editingId) {
-      document.getElementById('reg-card').style.display = 'block';
-      loadRegistrations(editingId);
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (data.success) {
+      msg.textContent = 'Saved.';
+      msg.className = 'save-msg ok';
+      if (!editingId && data.event?._id) editingId = data.event._id;
+      await loadList();
+      renderList();
+      if (editingId) {
+        document.getElementById('reg-card').style.display = 'block';
+        loadRegistrations(editingId);
+      }
+    } else {
+      msg.textContent = data.message || 'Save failed.';
+      msg.className = 'save-msg err';
     }
-  } else {
-    msg.textContent = data.message || 'Save failed.';
+  } catch (err) {
+    console.error('Save event failed:', err);
+    msg.textContent = 'Save failed — check your connection and try again.';
     msg.className = 'save-msg err';
   }
 }

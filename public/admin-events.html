@@ -9,11 +9,11 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="stylesheet" href="/style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.31.6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.9"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@2.0.9"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.7"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@2.7.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.31.6/dist/editorjs.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.9/dist/header.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@2.0.9/dist/editorjs-list.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.7/dist/paragraph.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@2.7.6/dist/quote.umd.js"></script>
 </head>
 <body class="admin-body">
   <div class="admin-topbar">
@@ -100,7 +100,8 @@
 
         <div class="admin-card">
           <h3>Full description</h3>
-          <p class="hint">Rich text — headings, paragraphs, lists, quotes.</p>
+          <p class="hint">Rich text — headings, paragraphs, lists, quotes. Click inside the box below to type.</p>
+          <p id="editor-status" class="hint" style="margin-top:0.5rem;"></p>
           <div id="editorjs" class="editor-holder"></div>
         </div>
 

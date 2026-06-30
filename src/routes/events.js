@@ -32,22 +32,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/events/:slug — single event by slug
-router.get('/:slug', async (req, res) => {
-  try {
-    const filter = { slug: req.params.slug };
-    if (!isAdmin(req)) filter.published = true;
-    const event = await ProgramEvent.findOne(filter).lean();
-    if (!event) {
-      return res.status(404).json({ success: false, message: 'Event not found.' });
-    }
-    res.json({ success: true, event });
-  } catch (err) {
-    console.error('GET /api/events/:slug error:', err);
-    res.status(500).json({ success: false, message: 'Failed to load event.' });
-  }
-});
-
 function buildPayload(body) {
   return {
     type: TYPES.includes(body.type) ? body.type : 'meetup',
@@ -146,6 +130,22 @@ router.get('/:id/registrations', requireAuth, async (req, res) => {
   } catch (err) {
     console.error('GET registrations error:', err);
     res.status(500).json({ success: false, message: 'Failed to load registrations.' });
+  }
+});
+
+// GET /api/events/:slug — single event by slug (after /:id/registrations)
+router.get('/:slug', async (req, res) => {
+  try {
+    const filter = { slug: req.params.slug };
+    if (!isAdmin(req)) filter.published = true;
+    const event = await ProgramEvent.findOne(filter).lean();
+    if (!event) {
+      return res.status(404).json({ success: false, message: 'Event not found.' });
+    }
+    res.json({ success: true, event });
+  } catch (err) {
+    console.error('GET /api/events/:slug error:', err);
+    res.status(500).json({ success: false, message: 'Failed to load event.' });
   }
 });
 

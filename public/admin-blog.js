@@ -36,13 +36,24 @@ async function initEditor(data) {
     await editor.destroy();
     editor = null;
   }
+  const holder = document.getElementById('editorjs');
+  if (holder) {
+    const fresh = document.createElement('div');
+    fresh.id = 'editorjs';
+    fresh.className = holder.className || 'editor-holder';
+    holder.replaceWith(fresh);
+  }
+  const ListTool = window.List || window.EditorjsList;
+  if (!window.EditorJS || !window.Header || !window.Paragraph || !ListTool) {
+    throw new Error('Editor.js failed to load. Hard-refresh the page.');
+  }
   editor = new EditorJS({
     holder: 'editorjs',
     data: data || { blocks: [{ type: 'paragraph', data: { text: '' } }] },
     tools: {
-      header: { class: Header, config: { levels: [2, 3], defaultLevel: 2 } },
-      list: { class: List, inlineToolbar: true },
-      paragraph: { class: Paragraph, inlineToolbar: true },
+      header: { class: window.Header, config: { levels: [2, 3], defaultLevel: 2 } },
+      list: { class: ListTool, inlineToolbar: true },
+      paragraph: { class: window.Paragraph, inlineToolbar: true },
     },
   });
   await editor.isReady;
