@@ -92,7 +92,7 @@ function renderSiteFooter() {
             <ul>
               <li><a href="mailto:info@gamainet.org">info@gamainet.org</a></li>
               <li><a href="/contact.html">Contact</a></li>
-              <li><a href="/admin-blog.html">Blog admin</a></li>
+              <li><a href="/admin.html">Admin</a></li>
             </ul>
           </div>
         </div>

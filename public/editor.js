@@ -23,13 +23,14 @@ async function loadContent() {
     if (!content) return;
     document.querySelectorAll('[data-key]').forEach(el => {
       const key = el.dataset.key;
-      if (content[key] !== undefined) {
-        el.innerHTML = content[key];
+      const val = content[key];
+      if (val !== undefined && String(val).trim() !== '') {
+        el.innerHTML = val;
       }
     });
     document.querySelectorAll('img[data-img-key]').forEach(el => {
       const key = el.dataset.imgKey;
-      if (content[key]) {
+      if (content[key] && String(content[key]).trim()) {
         el.src = content[key];
       }
     });
