@@ -12,17 +12,26 @@ function isAdmin(req) {
   return !!(req.session && req.session.isAdmin);
 }
 
-// GET /api/events?type=indabax  — list events
+// GET /api/events?type=indabax&featured=true&upcoming=true
 router.get('/', async (req, res) => {
   try {
     const filter = {};
     if (req.query.type && TYPES.includes(req.query.type)) {
       filter.type = req.query.type;
     }
+    if (req.query.featured === 'true') {
+      filter.featured = true;
+    }
+    if (req.query.upcoming === 'true') {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      filter.$or = [{ startDate: { $gte: now } }, { endDate: { $gte: now } }];
+    }
     if (!isAdmin(req)) filter.published = true;
 
+    const upcoming = req.query.upcoming === 'true';
     const events = await ProgramEvent.find(filter)
-      .sort({ startDate: -1, year: -1, createdAt: -1 })
+      .sort(upcoming ? { startDate: 1, year: 1, createdAt: -1 } : { startDate: -1, year: -1, createdAt: -1 })
       .lean();
 
     res.json({ success: true, events });

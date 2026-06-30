@@ -10,12 +10,12 @@ function fmtDateRange(start, end) {
   const opts = { day: 'numeric', month: 'long', year: 'numeric' };
   if (!end) return s.toLocaleDateString('en-GB', opts);
   const e = new Date(end);
+  if (s.toDateString() === e.toDateString()) return s.toLocaleDateString('en-GB', opts);
   const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
   if (sameMonth) return `${s.getDate()}–${e.getDate()} ${e.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`;
   return `${s.toLocaleDateString('en-GB', opts)} – ${e.toLocaleDateString('en-GB', opts)}`;
 }
 
-// Render Editor.js blocks to HTML
 function renderBlocks(data) {
   if (!data || !data.blocks) return '';
   return data.blocks
@@ -80,44 +80,41 @@ function agendaBlock(agenda) {
     </section>`;
 }
 
-function registrationBlock(ev) {
+function registrationHeroBlock(ev) {
   if (ev.externalRegistrationUrl) {
     return `
-      <section class="section" id="register" style="background:var(--off-white);">
-        <div class="container" style="max-width:640px;text-align:center;">
-          <h2 class="section-title">Register</h2>
-          <p style="color:var(--gray-600);margin:1rem 0 1.5rem;">Registration is handled on an external page.</p>
-          <a href="${esc(ev.externalRegistrationUrl)}" target="_blank" rel="noopener" class="btn-primary btn-lg">Register now</a>
-        </div>
-      </section>`;
+      <div class="reg-form-card reg-form-hero" id="register">
+        <h3>Register for this event</h3>
+        <p class="reg-form-hint">Registration is on an external page.</p>
+        <a href="${esc(ev.externalRegistrationUrl)}" target="_blank" rel="noopener" class="btn-primary btn-lg" style="width:100%;text-align:center;">Register now</a>
+      </div>`;
   }
   if (!ev.registrationOpen) {
     return `
-      <section class="section" id="register" style="background:var(--off-white);">
-        <div class="container" style="max-width:640px;text-align:center;">
-          <h2 class="section-title">Registration closed</h2>
-          <p style="color:var(--gray-600);margin-top:1rem;">Registration for this event is not open. Follow us or <a href="/contact.html">get in touch</a> for updates.</p>
-        </div>
-      </section>`;
+      <div class="reg-form-card reg-form-hero reg-form-closed" id="register">
+        <h3>Registration closed</h3>
+        <p class="reg-form-hint">Follow us or <a href="/contact.html">get in touch</a> for updates.</p>
+      </div>`;
   }
   return `
-    <section class="section" id="register" style="background:var(--off-white);">
-      <div class="container" style="max-width:600px;">
-        <div class="section-header"><p class="section-eyebrow eyebrow-center">Attend</p><h2 class="section-title">Register for this event</h2></div>
-        <div class="reg-form-card">
-          <form id="reg-form" class="contact-form">
-            <div class="form-group"><input type="text" id="reg-name" required placeholder="Full name" /></div>
-            <div class="form-group"><input type="email" id="reg-email" required placeholder="Email" /></div>
-            <div class="form-group"><input type="text" id="reg-org" placeholder="Organisation (optional)" /></div>
-            <div class="form-group"><input type="text" id="reg-role" placeholder="Role (optional)" /></div>
-            <div class="form-group"><input type="tel" id="reg-phone" placeholder="Phone (optional)" /></div>
-            <button type="submit" class="btn-form">Register</button>
-            <p id="reg-success" style="display:none;color:#10B981;margin-top:1rem;text-align:center;"></p>
-            <p id="reg-error" style="display:none;color:#EF4444;margin-top:1rem;text-align:center;"></p>
-          </form>
+    <div class="reg-form-card reg-form-hero" id="register">
+      <h3>Register free</h3>
+      <p class="reg-form-hint">Secure your spot — we'll send joining details by email.</p>
+      <form id="reg-form" class="contact-form reg-form-compact">
+        <div class="reg-form-row">
+          <div class="form-group"><input type="text" id="reg-name" required placeholder="Full name *" /></div>
+          <div class="form-group"><input type="email" id="reg-email" required placeholder="Email *" /></div>
         </div>
-      </div>
-    </section>`;
+        <div class="reg-form-row">
+          <div class="form-group"><input type="text" id="reg-org" placeholder="Organisation" /></div>
+          <div class="form-group"><input type="text" id="reg-role" placeholder="Role" /></div>
+        </div>
+        <div class="form-group"><input type="tel" id="reg-phone" placeholder="Phone (optional)" /></div>
+        <button type="submit" class="btn-form">Register for this event</button>
+        <p id="reg-success" class="reg-form-msg reg-form-msg-ok" style="display:none;"></p>
+        <p id="reg-error" class="reg-form-msg reg-form-msg-err" style="display:none;"></p>
+      </form>
+    </div>`;
 }
 
 function bindRegistrationForm() {
@@ -175,7 +172,7 @@ async function submitRegistration(e) {
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.textContent = 'Register';
+      btn.textContent = 'Register for this event';
     }
   }
 }
@@ -205,38 +202,45 @@ async function loadEvent() {
     document.title = `${ev.title} — AI-GAMNET`;
 
     const cover = ev.coverImage || TYPE_FALLBACK_IMG[ev.type] || '/images/home/hero-feature.jpg';
-    const meta = [
-      ev.startDate ? `<span>📅 ${fmtDateRange(ev.startDate, ev.endDate)}</span>` : '',
-      ev.timeInfo ? `<span>🕒 ${esc(ev.timeInfo)}</span>` : '',
-      ev.venue || ev.location ? `<span>📍 ${esc([ev.venue, ev.location].filter(Boolean).join(', '))}</span>` : '',
+    const dateStr = fmtDateRange(ev.startDate, ev.endDate);
+    const metaItems = [
+      dateStr ? `<li><span class="event-chip-label">Date</span><strong>${esc(dateStr)}</strong></li>` : '',
+      ev.timeInfo ? `<li><span class="event-chip-label">Time</span><strong>${esc(ev.timeInfo)}</strong></li>` : '',
+      ev.location ? `<li><span class="event-chip-label">Where</span><strong>${esc([ev.venue, ev.location].filter(Boolean).join(' · '))}</strong></li>` : '',
     ]
       .filter(Boolean)
       .join('');
 
     root.innerHTML = `
-      <header class="event-hero" style="background-image:linear-gradient(rgba(15,23,42,0.72),rgba(15,23,42,0.82)),url('${esc(cover)}');">
-        <div class="container">
-          <a href="${TYPE_BACK[ev.type] || '/programs.html'}" class="event-back">← ${TYPE_LABEL[ev.type] || 'Events'}</a>
-          <h1>${esc(ev.title)}</h1>
-          ${ev.theme ? `<p class="event-hero-theme">${esc(ev.theme)}</p>` : ''}
-          <div class="event-meta">${meta}</div>
-          <div class="event-hero-actions">
-            <a href="#register" class="btn-primary btn-lg">${ev.registrationOpen ? 'Register' : 'Details'}</a>
+      <header class="event-hero-pro">
+        <div class="container event-hero-pro-grid">
+          <div class="event-hero-pro-copy">
+            <a href="${TYPE_BACK[ev.type] || '/programs.html'}" class="event-back-light">← ${TYPE_LABEL[ev.type] || 'Events'}</a>
+            <span class="event-type-badge">${TYPE_LABEL[ev.type] || 'Event'}</span>
+            <h1>${esc(ev.title)}</h1>
+            ${ev.theme ? `<p class="event-hero-pro-theme">${esc(ev.theme)}</p>` : ''}
+            ${ev.summary ? `<p class="event-hero-pro-summary">${esc(ev.summary)}</p>` : ''}
+            ${metaItems ? `<ul class="event-meta-list">${metaItems}</ul>` : ''}
+            ${registrationHeroBlock(ev)}
+          </div>
+          <div class="event-hero-pro-visual">
+            <img src="${esc(cover)}" alt="${esc(ev.title)}" class="event-hero-pro-img" />
           </div>
         </div>
       </header>
 
-      ${ev.summary ? `<section class="section" style="padding-bottom:0;"><div class="container" style="max-width:880px;"><p class="event-lead">${esc(ev.summary)}</p></div></section>` : ''}
-
       ${
         renderBlocks(ev.description)
-          ? `<section class="section"><div class="container post-body" style="max-width:760px;">${renderBlocks(ev.description)}</div></section>`
+          ? `<section class="section"><div class="container post-body event-about" style="max-width:760px;">
+              <div class="section-header left" style="margin-bottom:1.5rem;"><p class="section-eyebrow">About</p><h2 class="section-title">Event details</h2></div>
+              ${renderBlocks(ev.description)}
+            </div></section>`
           : ''
       }
 
       ${
         ev.speakers && ev.speakers.length
-          ? `<section class="section" style="background:var(--white);"><div class="container">
+          ? `<section class="section" style="background:var(--off-white);"><div class="container">
               <div class="section-header"><p class="section-eyebrow eyebrow-center">Lineup</p><h2 class="section-title">Speakers</h2></div>
               <div class="speaker-grid">${ev.speakers.map(speakerCard).join('')}</div>
             </div></section>`
@@ -244,16 +248,9 @@ async function loadEvent() {
       }
 
       ${agendaBlock(ev.agenda)}
-
-      ${registrationBlock(ev)}
     `;
 
     bindRegistrationForm();
-
-    if (location.hash) {
-      const t = document.querySelector(location.hash);
-      if (t) t.scrollIntoView();
-    }
   } catch {
     root.innerHTML = '<div class="page-hero-img"><div class="container"><h1>Event not found</h1><p>This event may have been removed or is not yet published.</p></div></div>';
   }
