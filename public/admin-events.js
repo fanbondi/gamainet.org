@@ -268,7 +268,7 @@ async function newEvent() {
   editingId = null;
   document.getElementById('ev-type').value = 'meetup';
   document.getElementById('ev-year').value = new Date().getFullYear();
-  ['ev-title', 'ev-slug', 'ev-theme', 'ev-summary', 'ev-start', 'ev-end', 'ev-time', 'ev-location', 'ev-venue', 'ev-cover', 'ev-extreg'].forEach((id) => (document.getElementById(id).value = ''));
+  ['ev-title', 'ev-slug', 'ev-theme', 'ev-summary', 'ev-start', 'ev-end', 'ev-time', 'ev-location', 'ev-venue', 'ev-cover', 'ev-extreg', 'ev-meeting'].forEach((id) => (document.getElementById(id).value = ''));
   document.getElementById('ev-regopen').checked = true;
   document.getElementById('ev-published').checked = false;
   document.getElementById('ev-featured').checked = false;
@@ -298,6 +298,7 @@ async function editEvent(id) {
   document.getElementById('ev-venue').value = e.venue || '';
   document.getElementById('ev-cover').value = e.coverImage || '';
   document.getElementById('ev-extreg').value = e.externalRegistrationUrl || '';
+  document.getElementById('ev-meeting').value = e.meetingUrl || '';
   document.getElementById('ev-regopen').checked = e.registrationOpen !== false;
   document.getElementById('ev-published').checked = !!e.published;
   document.getElementById('ev-featured').checked = !!e.featured;
@@ -346,6 +347,7 @@ async function saveEvent() {
     venue: document.getElementById('ev-venue').value.trim(),
     coverImage: document.getElementById('ev-cover').value.trim(),
     externalRegistrationUrl: document.getElementById('ev-extreg').value.trim(),
+    meetingUrl: document.getElementById('ev-meeting').value.trim(),
     registrationOpen: document.getElementById('ev-regopen').checked,
     published: document.getElementById('ev-published').checked,
     featured: document.getElementById('ev-featured').checked,

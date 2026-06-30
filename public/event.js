@@ -163,7 +163,10 @@ async function submitRegistration(e) {
       throw new Error('Server error. Please try again in a moment.');
     }
     if (!res.ok || !data.success) throw new Error(data.message || 'Registration failed.');
-    ok.textContent = data.message;
+    ok.innerHTML = esc(data.message);
+    if (data.meetingUrl) {
+      ok.innerHTML += ` <a href="${esc(data.meetingUrl)}" target="_blank" rel="noopener" class="reg-join-link">Join Google Meet →</a>`;
+    }
     ok.style.display = 'block';
     form.reset();
   } catch (e2) {
@@ -207,6 +210,9 @@ async function loadEvent() {
       dateStr ? `<li><span class="event-chip-label">Date</span><strong>${esc(dateStr)}</strong></li>` : '',
       ev.timeInfo ? `<li><span class="event-chip-label">Time</span><strong>${esc(ev.timeInfo)}</strong></li>` : '',
       ev.location ? `<li><span class="event-chip-label">Where</span><strong>${esc([ev.venue, ev.location].filter(Boolean).join(' · '))}</strong></li>` : '',
+      ev.meetingUrl
+        ? `<li class="event-meta-join"><span class="event-chip-label">Join</span><a href="${esc(ev.meetingUrl)}" target="_blank" rel="noopener" class="btn-primary btn-sm">Open Google Meet</a></li>`
+        : '',
     ]
       .filter(Boolean)
       .join('');

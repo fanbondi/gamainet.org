@@ -54,6 +54,7 @@ const ProgramEventSchema = new mongoose.Schema(
     agenda: { type: [AgendaDaySchema], default: [] },
     registrationOpen: { type: Boolean, default: true },
     externalRegistrationUrl: { type: String, default: '' },
+    meetingUrl: { type: String, default: '' },
     published: { type: Boolean, default: false },
     featured: { type: Boolean, default: false },
   },

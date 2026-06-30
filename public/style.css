@@ -1100,6 +1100,13 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
 .reg-form-msg { margin-top: 0.85rem; text-align: center; font-size: 0.9rem; font-weight: 600; }
 .reg-form-msg-ok { color: #16a34a; }
 .reg-form-msg-err { color: #EF4444; }
+.reg-join-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.event-meta-join .btn-sm { padding: 0.45rem 1rem; font-size: 0.85rem; }
 .event-about { padding-top: 0.5rem; }
 
 /* Homepage upcoming events spotlight */

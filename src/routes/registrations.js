@@ -2,6 +2,7 @@ const express = require('express');
 const ProgramEvent = require('../models/ProgramEvent');
 const Registration = require('../models/Registration');
 const { requireAuth } = require('../middleware/auth');
+const { sendRegistrationConfirmation } = require('../utils/mail');
 
 const router = express.Router();
 
@@ -25,19 +26,42 @@ router.post('/', async (req, res) => {
       return res.status(403).json({ success: false, message: 'Registration is closed for this event.' });
     }
 
+    const trimmedName = String(name).trim();
+    const trimmedEmail = String(email).toLowerCase().trim();
+
     await Registration.create({
       event: event._id,
       eventType: event.type,
       eventTitle: event.title,
-      name: String(name).trim(),
-      email: String(email).toLowerCase().trim(),
+      name: trimmedName,
+      email: trimmedEmail,
       organisation: organisation?.trim() || '',
       role: role?.trim() || '',
       phone: phone?.trim() || '',
       notes: notes?.trim() || '',
     });
 
-    res.status(201).json({ success: true, message: 'You are registered! We will be in touch with details.' });
+    let emailSent = false;
+    try {
+      emailSent = await sendRegistrationConfirmation({
+        to: trimmedEmail,
+        name: trimmedName,
+        event,
+      });
+    } catch (mailErr) {
+      console.error('Registration email failed:', mailErr.message);
+    }
+
+    const message = emailSent
+      ? "You're registered! We've emailed you the event details."
+      : `You're registered!${event.meetingUrl ? ' Join here: ' + event.meetingUrl : ' We will be in touch with details.'}`;
+
+    res.status(201).json({
+      success: true,
+      message,
+      emailSent,
+      meetingUrl: event.meetingUrl || '',
+    });
   } catch (err) {
     if (err.code === 11000) {
       return res

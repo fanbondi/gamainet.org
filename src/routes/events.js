@@ -59,6 +59,7 @@ function buildPayload(body) {
     agenda: Array.isArray(body.agenda) ? body.agenda : [],
     registrationOpen: body.registrationOpen !== false,
     externalRegistrationUrl: body.externalRegistrationUrl?.trim() || '',
+    meetingUrl: body.meetingUrl?.trim() || '',
     published: !!body.published,
     featured: !!body.featured,
   };
