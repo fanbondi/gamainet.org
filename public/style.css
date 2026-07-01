@@ -517,6 +517,33 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
 }
 .btn-form:hover { background: var(--accent-dark); }
 
+/* ---- Join page ---- */
+.join-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+  max-width: 1000px;
+}
+.join-title {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 4vw, 1.9rem);
+  color: var(--accent-dark);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.join-form-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+.form-msg { margin-top: 1rem; text-align: center; font-size: 0.95rem; }
+.form-msg-ok { color: #10B981; }
+.form-msg-err { color: #EF4444; }
+
 /* ===== AI-GAMNET OVERRIDES ===== */
 .hero-compact {
   min-height: 0 !important;
@@ -939,6 +966,8 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
   .hero-pro-media { order: -1; }
   .hero-pro-body { padding: 2.25rem 0 3rem; }
   .hero-event-spotlight-wrap { left: 1rem; right: 1rem; max-width: none; }
+  .join-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .join-form-card { padding: 1.5rem; }
   .media-row { grid-template-columns: 1fr; gap: 1.5rem; }
   .media-row.reverse .media-row-text { order: 0; }
   .hero-gallery { grid-template-columns: repeat(3, 1fr); }
@@ -973,6 +1002,10 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
   .hero-pro-meta { gap: 1.25rem; flex-wrap: wrap; }
   .trust-logos { gap: 1.75rem 2.25rem; }
   .trust-logos img { height: 36px; }
+  .container { padding: 0 1.25rem; }
+  .section { padding: 3.5rem 0; }
+  .join-form-card { padding: 1.25rem; }
+  .page-hero-img { padding: calc(var(--nav-h) + 2.5rem) 0 2.5rem; }
 }
 
 /* =============================================

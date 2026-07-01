@@ -14,9 +14,19 @@ const SITE_NAV = [
   { href: '/ai-in-gambia.html', label: 'AI in Gambia' },
   { href: '/blog.html', label: 'Blog', match: (p) => p.startsWith('/blog') },
   { href: '/about.html', label: 'About' },
-  { href: '/join.html', label: 'Join' },
+  { href: '/join.html', label: 'Join', hideOnEventPages: true },
   { href: '/contact.html', label: 'Contact' },
 ];
+
+function isEventArea(path) {
+  return (
+    path.startsWith('/event') ||
+    path.startsWith('/e/') ||
+    path.startsWith('/indabax') ||
+    path.startsWith('/meetups') ||
+    path.startsWith('/webinars')
+  );
+}
 
 function isNavActive(item, path) {
   if (item.match) return item.match(path);
@@ -28,7 +38,9 @@ function renderSiteHeader() {
   if (!mount) return;
 
   const path = window.location.pathname;
-  const links = SITE_NAV.map((item) => {
+  const onEventPage = isEventArea(path);
+  const navItems = SITE_NAV.filter((item) => !(onEventPage && item.hideOnEventPages));
+  const links = navItems.map((item) => {
     const active = isNavActive(item, path) ? ' active' : '';
     if (item.children) {
       const sub = item.children
@@ -49,7 +61,7 @@ function renderSiteHeader() {
           <span></span><span></span><span></span>
         </button>
         <ul class="nav-links" id="nav-links">${links}</ul>
-        <div class="nav-ctas"><a href="/join.html" class="btn-primary">Join</a></div>
+        ${onEventPage ? '' : '<div class="nav-ctas"><a href="/join.html" class="btn-primary">Join</a></div>'}
       </div>
     </nav>`;
 
@@ -66,6 +78,9 @@ function renderSiteHeader() {
 function renderSiteFooter() {
   const mount = document.getElementById('site-footer');
   if (!mount) return;
+
+  const onEventPage = isEventArea(window.location.pathname);
+  const joinLink = onEventPage ? '' : '<li><a href="/join.html">Join</a></li>';
 
   mount.innerHTML = `
     <footer class="footer">
@@ -84,7 +99,7 @@ function renderSiteFooter() {
               <li><a href="/programs.html">Programs</a></li>
               <li><a href="/blog.html">Blog</a></li>
               <li><a href="/about.html">About</a></li>
-              <li><a href="/join.html">Join</a></li>
+              ${joinLink}
             </ul>
           </div>
           <div class="footer-col">

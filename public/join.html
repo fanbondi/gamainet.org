@@ -21,11 +21,11 @@
     </div>
   </header>
 
-  <section class="section">
-    <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;max-width:1000px;">
-      <div>
+  <section class="section join-section">
+    <div class="container join-grid">
+      <div class="join-copy">
         <p class="section-eyebrow">Membership</p>
-        <h2 style="font-family:var(--font-heading);font-weight:900;font-size:1.9rem;color:var(--accent-dark);line-height:1.15;margin-bottom:1rem;">Why become a member?</h2>
+        <h2 class="join-title">Why become a member?</h2>
         <ul class="check-list">
           <li>Access to IndabaX, meetups, and webinars</li>
           <li>Mentorship and learning resources</li>
@@ -33,7 +33,7 @@
           <li>Opportunities to contribute and lead</li>
         </ul>
       </div>
-      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow);">
+      <div class="join-form-card">
         <form id="join-form" class="contact-form" onsubmit="submitJoin(event)">
           <div class="form-group"><input type="text" id="join-name" placeholder="Full name" required /></div>
           <div class="form-group"><input type="email" id="join-email" placeholder="Email" required /></div>
@@ -41,8 +41,8 @@
           <div class="form-group"><input type="text" id="join-role" placeholder="Role (optional)" /></div>
           <div class="form-group"><textarea id="join-interests" rows="3" placeholder="Interests (optional)"></textarea></div>
           <button type="submit" class="btn-form">Join AI-GAMNET</button>
-          <p id="join-success" style="display:none;color:#10B981;margin-top:1rem;text-align:center;">Welcome to AI-GAMNET!</p>
-          <p id="join-error" style="display:none;color:#EF4444;margin-top:1rem;text-align:center;"></p>
+          <p id="join-success" class="form-msg form-msg-ok" style="display:none;">Welcome to AI-GAMNET!</p>
+          <p id="join-error" class="form-msg form-msg-err" style="display:none;"></p>
         </form>
       </div>
     </div>
