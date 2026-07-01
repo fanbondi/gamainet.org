@@ -189,8 +189,7 @@ const TYPE_FALLBACK_IMG = {
 };
 
 async function loadEvent() {
-  const params = new URLSearchParams(location.search);
-  const slug = params.get('slug');
+  const slug = getEventRefFromLocation();
   const root = document.getElementById('event-root');
   if (!slug) {
     root.innerHTML = '<div class="page-hero-img"><div class="container"><h1>Event not found</h1></div></div>';
@@ -202,6 +201,9 @@ async function loadEvent() {
     if (!data.success) throw new Error();
     const ev = data.event;
     CURRENT_EVENT = ev;
+    if (ev.shortCode && !location.pathname.startsWith('/e/')) {
+      history.replaceState(null, '', eventHref(ev));
+    }
     document.title = `${ev.title} — AI-GAMNET`;
 
     const cover = ev.coverImage || TYPE_FALLBACK_IMG[ev.type] || '/images/home/hero-feature.jpg';

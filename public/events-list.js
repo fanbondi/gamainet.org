@@ -33,7 +33,7 @@ function eventCard(ev) {
   const st = eventStatus(ev);
   const date = fmtDateRange(ev.startDate, ev.endDate);
   return `
-    <a class="event-card" href="/event.html?slug=${encodeURIComponent(ev.slug)}">
+    <a class="event-card" href="${eventHref(ev)}">
       <div class="event-card-media">
         <img src="${img}" alt="${esc(ev.title)}" loading="lazy" />
         <span class="event-pill ${st.cls}">${st.label}</span>

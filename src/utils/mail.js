@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const { eventPublicPath } = require('./event-codes');
 
 let transporter = null;
 
@@ -45,6 +46,8 @@ async function sendRegistrationConfirmation({ to, name, event }) {
   const timeStr = event.timeInfo || '';
   const where = [event.venue, event.location].filter(Boolean).join(' · ');
   const meetLink = event.meetingUrl || '';
+  const siteBase = process.env.SITE_URL || 'https://gamainet.org';
+  const eventUrl = `${siteBase}${eventPublicPath(event)}`;
 
   const subject = `You're registered — ${event.title}`;
   const text = [
@@ -55,6 +58,7 @@ async function sendRegistrationConfirmation({ to, name, event }) {
     dateStr ? `Date: ${dateStr}` : '',
     timeStr ? `Time: ${timeStr}` : '',
     where ? `Where: ${where}` : '',
+    `Event page: ${eventUrl}`,
     meetLink ? `Join link: ${meetLink}` : '',
     '',
     meetLink
@@ -77,6 +81,7 @@ async function sendRegistrationConfirmation({ to, name, event }) {
         ${timeStr ? `<tr><td style="padding:0.25rem 1rem 0.25rem 0;color:#64748b;">Time</td><td><strong>${escapeHtml(timeStr)}</strong></td></tr>` : ''}
         ${where ? `<tr><td style="padding:0.25rem 1rem 0.25rem 0;color:#64748b;">Where</td><td><strong>${escapeHtml(where)}</strong></td></tr>` : ''}
       </table>
+      <p><a href="${escapeHtml(eventUrl)}" style="color:#f97316;font-weight:700;">View event details</a></p>
       ${
         meetLink
           ? `<p><a href="${escapeHtml(meetLink)}" style="display:inline-block;background:#f97316;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:700;">Join Google Meet</a></p>

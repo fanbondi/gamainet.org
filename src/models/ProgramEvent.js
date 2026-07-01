@@ -40,6 +40,7 @@ const ProgramEventSchema = new mongoose.Schema(
     },
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true, index: true },
+    shortCode: { type: String, unique: true, sparse: true, index: true, lowercase: true, trim: true },
     summary: { type: String, default: '' },
     description: { type: mongoose.Schema.Types.Mixed, default: null },
     theme: { type: String, default: '' },

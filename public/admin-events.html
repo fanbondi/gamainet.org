@@ -68,8 +68,14 @@
           <label>Title
             <input id="ev-title" placeholder="e.g. Deep Learning IndabaX Gambia 2025" />
           </label>
-          <label>Slug (optional)
+          <label>Slug (optional, internal)
             <input id="ev-slug" placeholder="auto-generated from title" />
+          </label>
+          <label>Short share link (optional)
+            <input id="ev-short" placeholder="e.g. chatbots-jul26" />
+            <p class="hint">Share URL: <code id="ev-share-preview">/e/…</code>
+              <button type="button" class="btn-outline btn-sm" style="margin-left:0.5rem;" onclick="copyShareLink()">Copy</button>
+            </p>
           </label>
           <label>Theme / tagline
             <input id="ev-theme" placeholder="e.g. AI in Education" />

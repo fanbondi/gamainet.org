@@ -3,6 +3,12 @@ const slugify = require('slugify');
 const ProgramEvent = require('../models/ProgramEvent');
 const Registration = require('../models/Registration');
 const { requireAuth } = require('../middleware/auth');
+const {
+  normalizeShortCode,
+  suggestShortCode,
+  ensureUniqueShortCode,
+  eventLookupFilter,
+} = require('../utils/event-codes');
 
 const router = express.Router();
 
@@ -62,7 +68,21 @@ function buildPayload(body) {
     meetingUrl: body.meetingUrl?.trim() || '',
     published: !!body.published,
     featured: !!body.featured,
+    shortCode: body.shortCode?.trim() ? normalizeShortCode(body.shortCode) : undefined,
   };
+}
+
+async function resolveShortCode(body, excludeId = null) {
+  const manual = body.shortCode?.trim();
+  if (manual) return ensureUniqueShortCode(manual, excludeId);
+  return ensureUniqueShortCode(
+    suggestShortCode({
+      title: body.title,
+      type: body.type,
+      startDate: body.startDate,
+    }),
+    excludeId
+  );
 }
 
 // POST /api/events — create
@@ -79,12 +99,13 @@ router.post('/', requireAuth, async (req, res) => {
     if (!payload.year && payload.startDate) {
       payload.year = payload.startDate.getFullYear();
     }
+    payload.shortCode = await resolveShortCode(req.body);
 
     const event = await ProgramEvent.create(payload);
     res.status(201).json({ success: true, event });
   } catch (err) {
     if (err.code === 11000) {
-      return res.status(409).json({ success: false, message: 'An event with that slug already exists.' });
+      return res.status(409).json({ success: false, message: 'An event with that slug or short link already exists.' });
     }
     console.error('POST /api/events error:', err);
     res.status(500).json({ success: false, message: 'Failed to create event.' });
@@ -98,6 +119,14 @@ router.put('/:id', requireAuth, async (req, res) => {
     if (req.body.slug?.trim()) {
       payload.slug = req.body.slug.trim();
     }
+    if (req.body.shortCode !== undefined) {
+      const manual = req.body.shortCode?.trim();
+      if (manual) {
+        payload.shortCode = await ensureUniqueShortCode(manual, req.params.id);
+      } else {
+        payload.shortCode = await resolveShortCode(req.body, req.params.id);
+      }
+    }
     const event = await ProgramEvent.findByIdAndUpdate(req.params.id, payload, {
       new: true,
       runValidators: true,
@@ -108,7 +137,7 @@ router.put('/:id', requireAuth, async (req, res) => {
     res.json({ success: true, event });
   } catch (err) {
     if (err.code === 11000) {
-      return res.status(409).json({ success: false, message: 'An event with that slug already exists.' });
+      return res.status(409).json({ success: false, message: 'An event with that slug or short link already exists.' });
     }
     console.error('PUT /api/events/:id error:', err);
     res.status(500).json({ success: false, message: 'Failed to update event.' });
@@ -143,10 +172,10 @@ router.get('/:id/registrations', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/events/:slug — single event by slug (after /:id/registrations)
+// GET /api/events/:slug — single event by slug or short code
 router.get('/:slug', async (req, res) => {
   try {
-    const filter = { slug: req.params.slug };
+    const filter = eventLookupFilter(req.params.slug);
     if (!isAdmin(req)) filter.published = true;
     const event = await ProgramEvent.findOne(filter).lean();
     if (!event) {

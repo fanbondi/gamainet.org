@@ -75,6 +75,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.get('/e/:code', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'event.html'));
+});
+
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ success: false, message: 'API route not found.' });

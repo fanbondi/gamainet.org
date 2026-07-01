@@ -268,7 +268,8 @@ async function newEvent() {
   editingId = null;
   document.getElementById('ev-type').value = 'meetup';
   document.getElementById('ev-year').value = new Date().getFullYear();
-  ['ev-title', 'ev-slug', 'ev-theme', 'ev-summary', 'ev-start', 'ev-end', 'ev-time', 'ev-location', 'ev-venue', 'ev-cover', 'ev-extreg', 'ev-meeting'].forEach((id) => (document.getElementById(id).value = ''));
+  ['ev-title', 'ev-slug', 'ev-short', 'ev-theme', 'ev-summary', 'ev-start', 'ev-end', 'ev-time', 'ev-location', 'ev-venue', 'ev-cover', 'ev-extreg', 'ev-meeting'].forEach((id) => (document.getElementById(id).value = ''));
+  updateSharePreview();
   document.getElementById('ev-regopen').checked = true;
   document.getElementById('ev-published').checked = false;
   document.getElementById('ev-featured').checked = false;
@@ -289,6 +290,8 @@ async function editEvent(id) {
   document.getElementById('ev-year').value = e.year || '';
   document.getElementById('ev-title').value = e.title || '';
   document.getElementById('ev-slug').value = e.slug || '';
+  document.getElementById('ev-short').value = e.shortCode || '';
+  updateSharePreview(e);
   document.getElementById('ev-theme').value = e.theme || '';
   document.getElementById('ev-summary').value = e.summary || '';
   document.getElementById('ev-start').value = dateInput(e.startDate);
@@ -338,6 +341,7 @@ async function saveEvent() {
     year: document.getElementById('ev-year').value || undefined,
     title: document.getElementById('ev-title').value.trim(),
     slug: document.getElementById('ev-slug').value.trim(),
+    shortCode: document.getElementById('ev-short').value.trim(),
     theme: document.getElementById('ev-theme').value.trim(),
     summary: document.getElementById('ev-summary').value.trim(),
     startDate: document.getElementById('ev-start').value || undefined,
@@ -376,6 +380,10 @@ async function saveEvent() {
       msg.textContent = 'Saved.';
       msg.className = 'save-msg ok';
       if (!editingId && data.event?._id) editingId = data.event._id;
+      if (data.event?.shortCode) {
+        document.getElementById('ev-short').value = data.event.shortCode;
+        updateSharePreview(data.event);
+      }
       await loadList();
       renderList();
       if (editingId) {
@@ -442,8 +450,43 @@ function exportRegistrations() {
 }
 
 // ---------- util ----------
+function updateSharePreview(event) {
+  const el = document.getElementById('ev-share-preview');
+  if (!el) return;
+  const short = document.getElementById('ev-short')?.value.trim();
+  const slug = document.getElementById('ev-slug')?.value.trim();
+  const code = event?.shortCode || short;
+  if (code) {
+    el.textContent = `${location.origin}/e/${code}`;
+    return;
+  }
+  if (slug) {
+    el.textContent = `${location.origin}/event.html?slug=${slug}`;
+    return;
+  }
+  el.textContent = `${location.origin}/e/…`;
+}
+
+function copyShareLink() {
+  const text = document.getElementById('ev-share-preview')?.textContent || '';
+  if (!text || text.endsWith('/e/…')) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const msg = document.getElementById('save-msg');
+    if (msg) {
+      msg.textContent = 'Share link copied.';
+      msg.className = 'save-msg ok';
+      setTimeout(() => {
+        if (msg.textContent === 'Share link copied.') msg.textContent = '';
+      }, 2000);
+    }
+  });
+}
+
 function esc(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-document.addEventListener('DOMContentLoaded', checkSession);
+document.addEventListener('DOMContentLoaded', () => {
+  checkSession();
+  document.getElementById('ev-short')?.addEventListener('input', () => updateSharePreview());
+});

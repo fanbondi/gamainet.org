@@ -9,6 +9,7 @@ dotenv.config();
 
 const mongoose = require('mongoose');
 const ProgramEvent = require('../models/ProgramEvent');
+const { ensureUniqueShortCode, suggestShortCode } = require('./event-codes');
 
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/aigamnet';
 
@@ -17,6 +18,7 @@ const events = [
     type: 'webinar',
     title: 'Building Automated AI Chatbots for Businesses and Government Agencies',
     slug: 'ai-chatbots-businesses-government-webinar',
+    shortCode: 'chatbots-jul26',
     theme: 'Smarter customer service starts here, live demo included',
     summary:
       'Learn how to deploy AI-powered chatbots for your business or agency, handle customer enquiries 24/7, and watch a live build demo. Free and open to all.',
@@ -95,6 +97,7 @@ const events = [
     type: 'indabax',
     title: 'Deep Learning IndabaX Gambia 2025',
     slug: 'indabax-gambia-2025',
+    shortCode: 'indabax-25',
     theme: 'AI in Education',
     summary:
       'Our flagship three-day machine learning and AI conference, bringing together researchers, professionals, and students at the University of The Gambia.',
@@ -157,6 +160,7 @@ const events = [
     type: 'indabax',
     title: 'Deep Learning IndabaX Gambia 2024',
     slug: 'indabax-gambia-2024',
+    shortCode: 'indabax-24',
     theme: 'Strengthening African AI',
     summary: 'The 2024 edition of IndabaX Gambia, hosted at the University of The Gambia.',
     coverImage: '/images/home/african-workshop.jpg',
@@ -179,6 +183,7 @@ const events = [
     type: 'indabax',
     title: 'Deep Learning IndabaX Gambia 2023',
     slug: 'indabax-gambia-2023',
+    shortCode: 'indabax-23',
     theme: 'Building the community',
     summary: 'The first IndabaX Gambia — where it all began.',
     coverImage: '/images/home/african-collaboration.jpg',
@@ -200,8 +205,21 @@ async function run() {
   await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 8000 });
   for (const ev of events) {
     await ProgramEvent.findOneAndUpdate({ slug: ev.slug }, ev, { upsert: true, new: true, setDefaultsOnInsert: true });
-    console.log('Seeded:', ev.slug);
+    console.log('Seeded:', ev.slug, ev.shortCode ? `(${ev.shortCode})` : '');
   }
+
+  const missing = await ProgramEvent.find({
+    $or: [{ shortCode: { $exists: false } }, { shortCode: null }, { shortCode: '' }],
+  });
+  for (const ev of missing) {
+    const shortCode = await ensureUniqueShortCode(
+      suggestShortCode({ title: ev.title, type: ev.type, startDate: ev.startDate }),
+      ev._id
+    );
+    await ProgramEvent.updateOne({ _id: ev._id }, { $set: { shortCode } });
+    console.log('Short link:', ev.slug, '→', shortCode);
+  }
+
   await mongoose.disconnect();
   console.log('Done.');
 }

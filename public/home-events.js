@@ -28,7 +28,7 @@ function eventCard(ev) {
   const date = fmtDateRange(ev.startDate, ev.endDate);
   const type = TYPE_LABEL[ev.type] || 'Event';
   return `
-    <a class="event-card" href="/event.html?slug=${encodeURIComponent(ev.slug)}">
+    <a class="event-card" href="${eventHref(ev)}">
       <div class="event-card-media">
         <img src="${esc(img)}" alt="${esc(ev.title)}" loading="lazy" />
         <span class="event-pill open">${ev.registrationOpen ? 'Register now' : 'Upcoming'}</span>
@@ -47,7 +47,7 @@ function spotlightCard(ev) {
   const date = fmtDateRange(ev.startDate, ev.endDate);
   const type = TYPE_LABEL[ev.type] || 'Event';
   return `
-    <a class="hero-event-spotlight" href="/event.html?slug=${encodeURIComponent(ev.slug)}">
+    <a class="hero-event-spotlight" href="${eventHref(ev)}">
       <img src="${esc(img)}" alt="" class="hero-event-spotlight-img" />
       <div class="hero-event-spotlight-body">
         <span class="hero-event-spotlight-tag">${esc(type)} · ${esc(date)}</span>
