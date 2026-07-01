@@ -22,7 +22,7 @@ const events = [
     theme: 'Smarter customer service starts here, live demo included',
     summary:
       'Learn how to deploy AI-powered chatbots for your business or agency, handle customer enquiries 24/7, and watch a live build demo. Free and open to all.',
-    coverImage: '/images/home/online-webinar.jpg',
+    coverImage: '/images/events/chatbots-webinar-jul26.jpg',
     location: 'Online',
     venue: 'Google Meet',
     meetingUrl: 'https://meet.google.com/hvq-kdvx-puk',

@@ -101,17 +101,54 @@ async function initEditor(data) {
 }
 
 // ---------- Cover upload ----------
+function setCoverUploadStatus(message, isError = false) {
+  const el = document.getElementById('cover-upload-status');
+  if (!el) return;
+  el.textContent = message || '';
+  el.style.color = isError ? '#EF4444' : 'var(--gray-600)';
+}
+
 async function uploadCover(input) {
   if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (file.size > 10 * 1024 * 1024) {
+    setCoverUploadStatus('File too large — max 10MB.', true);
+    input.value = '';
+    return;
+  }
+
+  setCoverUploadStatus('Uploading…');
   const fd = new FormData();
-  fd.append('image', input.files[0]);
-  const res = await fetch('/api/upload', { method: 'POST', credentials: 'include', body: fd });
-  const data = await res.json();
-  if (data.success) {
+  fd.append('image', file);
+
+  try {
+    const res = await fetch('/api/upload', { method: 'POST', credentials: 'include', body: fd });
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error(res.ok ? 'Invalid server response.' : `Upload failed (${res.status}). Try logging in again.`);
+    }
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || `Upload failed (${res.status}).`);
+    }
+
     document.getElementById('ev-cover').value = data.url;
     renderCoverPreview(data.url);
-  } else {
-    alert(data.message || 'Upload failed');
+
+    if (editingId) {
+      setCoverUploadStatus('Cover uploaded — saving event…');
+      await saveEvent({ silent: true });
+      setCoverUploadStatus('Cover saved.');
+    } else {
+      setCoverUploadStatus('Cover uploaded — save the event to keep it.');
+    }
+  } catch (err) {
+    console.error('uploadCover failed:', err);
+    setCoverUploadStatus(err.message || 'Upload failed.', true);
+  } finally {
+    input.value = '';
   }
 }
 
@@ -124,13 +161,16 @@ async function uploadSpeakerPhoto(input, idx) {
   if (!input.files || !input.files[0]) return;
   const fd = new FormData();
   fd.append('image', input.files[0]);
-  const res = await fetch('/api/upload', { method: 'POST', credentials: 'include', body: fd });
-  const data = await res.json();
-  if (data.success) {
+  try {
+    const res = await fetch('/api/upload', { method: 'POST', credentials: 'include', body: fd });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.message || 'Upload failed');
     document.querySelector(`#sp-${idx} .sp-photo`).value = data.url;
     document.querySelector(`#sp-${idx} .sp-photo-preview`).innerHTML = `<img src="${data.url}" alt="" />`;
-  } else {
-    alert(data.message || 'Upload failed');
+  } catch (err) {
+    alert(err.message || 'Upload failed');
+  } finally {
+    input.value = '';
   }
 }
 
@@ -318,12 +358,15 @@ async function editEvent(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-async function saveEvent() {
+async function saveEvent(opts = {}) {
   const msg = document.getElementById('save-msg');
   if (!editor) {
-    msg.textContent = 'Editor still loading — wait a moment and try again.';
-    msg.className = 'save-msg err';
-    return;
+    const text = 'Editor still loading — wait a moment and try again.';
+    if (!opts.silent) {
+      msg.textContent = text;
+      msg.className = 'save-msg err';
+    }
+    throw new Error(text);
   }
 
   let description;
@@ -361,9 +404,12 @@ async function saveEvent() {
   };
 
   if (!body.title) {
-    msg.textContent = 'Title is required.';
-    msg.className = 'save-msg err';
-    return;
+    const text = 'Title is required.';
+    if (!opts.silent) {
+      msg.textContent = text;
+      msg.className = 'save-msg err';
+    }
+    throw new Error(text);
   }
 
   const url = editingId ? `/api/events/${editingId}` : '/api/events';
@@ -377,12 +423,18 @@ async function saveEvent() {
     });
     const data = await res.json();
     if (data.success) {
-      msg.textContent = 'Saved.';
-      msg.className = 'save-msg ok';
+      if (!opts.silent) {
+        msg.textContent = 'Saved.';
+        msg.className = 'save-msg ok';
+      }
       if (!editingId && data.event?._id) editingId = data.event._id;
       if (data.event?.shortCode) {
         document.getElementById('ev-short').value = data.event.shortCode;
         updateSharePreview(data.event);
+      }
+      if (data.event?.coverImage) {
+        document.getElementById('ev-cover').value = data.event.coverImage;
+        renderCoverPreview(data.event.coverImage);
       }
       await loadList();
       renderList();
@@ -390,14 +442,21 @@ async function saveEvent() {
         document.getElementById('reg-card').style.display = 'block';
         loadRegistrations(editingId);
       }
-    } else {
-      msg.textContent = data.message || 'Save failed.';
+      return true;
+    }
+    const errText = data.message || 'Save failed.';
+    if (!opts.silent) {
+      msg.textContent = errText;
       msg.className = 'save-msg err';
     }
+    throw new Error(errText);
   } catch (err) {
     console.error('Save event failed:', err);
-    msg.textContent = 'Save failed — check your connection and try again.';
-    msg.className = 'save-msg err';
+    if (!opts.silent) {
+      msg.textContent = err.message || 'Save failed — check your connection and try again.';
+      msg.className = 'save-msg err';
+    }
+    throw err;
   }
 }
 

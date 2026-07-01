@@ -17,19 +17,46 @@ const storage = multer.diskStorage({
   },
 });
 
+const ALLOWED_MIME = new Set([
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/pjpeg',
+  'application/octet-stream',
+]);
+const ALLOWED_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif']);
+
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-    cb(null, allowed.includes(file.mimetype));
+    const ext = path.extname(file.originalname).toLowerCase();
+    const ok = ALLOWED_MIME.has(file.mimetype) || ALLOWED_EXT.has(ext);
+    cb(null, ok);
   },
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-router.post('/', requireAuth, upload.single('image'), async (req, res) => {
+function handleUpload(req, res, next) {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ success: false, message: 'File too large (max 10MB).' });
+      }
+      return res.status(400).json({ success: false, message: err.message || 'Upload failed.' });
+    }
+    next();
+  });
+}
+
+router.post('/', requireAuth, handleUpload, async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ success: false, message: 'No file uploaded.' });
+      return res.status(400).json({
+        success: false,
+        message: 'No image received. Use JPG, PNG, WebP, or GIF (max 10MB).',
+      });
     }
     const url = `/uploads/${req.file.filename}`;
     const doc = await Upload.create({

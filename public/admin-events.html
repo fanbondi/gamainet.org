@@ -99,8 +99,12 @@
           <label>Cover image
             <div class="img-field">
               <input id="ev-cover" placeholder="/uploads/... or paste URL" />
-              <input type="file" id="ev-cover-file" accept="image/*" onchange="uploadCover(this)" />
+              <label class="btn-outline btn-sm img-file-btn">
+                Browse image
+                <input type="file" id="ev-cover-file" accept="image/jpeg,image/png,image/webp,image/gif" onchange="uploadCover(this)" />
+              </label>
             </div>
+            <p id="cover-upload-status" class="hint" style="min-height:1.25rem;"></p>
             <div id="ev-cover-preview" class="img-preview"></div>
           </label>
         </div>

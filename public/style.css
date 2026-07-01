@@ -1346,6 +1346,9 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
 .img-field input[type="text"], .img-field input:not([type="file"]) { flex: 1; min-width: 180px; }
 .img-preview { margin-top: 0.5rem; }
 .img-preview img { max-height: 90px; border-radius: 8px; border: 1px solid var(--gray-200); }
+#ev-cover-preview img { max-height: 220px; max-width: 100%; width: auto; }
+.img-field input[type="file"] { display: none; }
+.img-file-btn { cursor: pointer; margin: 0; white-space: nowrap; }
 .repeat-row { border: 1px dashed var(--gray-200); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
 .repeat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
 .agenda-day { border: 1px solid var(--gray-200); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
