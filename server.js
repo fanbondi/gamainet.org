@@ -51,6 +51,7 @@ app.use('/api/members', require('./src/routes/members'));
 app.use('/api/blog', require('./src/routes/blog'));
 app.use('/api/events', require('./src/routes/events'));
 app.use('/api/registrations', require('./src/routes/registrations'));
+app.use('/api/discussions', require('./src/routes/discussions'));
 
 const Contact = require('./src/models/Contact');
 app.post('/api/contact', async (req, res) => {

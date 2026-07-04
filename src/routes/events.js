@@ -1,6 +1,7 @@
 const express = require('express');
 const slugify = require('slugify');
 const ProgramEvent = require('../models/ProgramEvent');
+const EventDiscussionPost = require('../models/EventDiscussionPost');
 const Registration = require('../models/Registration');
 const { requireAuth } = require('../middleware/auth');
 const {
@@ -152,6 +153,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, message: 'Event not found.' });
     }
     await Registration.deleteMany({ event: event._id });
+    await EventDiscussionPost.deleteMany({ event: event._id });
     res.json({ success: true });
   } catch (err) {
     console.error('DELETE /api/events/:id error:', err);
