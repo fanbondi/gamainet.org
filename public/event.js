@@ -112,13 +112,26 @@ function discussionSection(ev) {
         <div class="discussion-composer">
           <h3>Start a question</h3>
           <form id="discussion-form" class="discussion-form">
-            <div class="reg-form-row">
-              <div class="form-group">
-                <input type="text" id="discussion-name" maxlength="60" placeholder="Name (optional, defaults to Anonymous)" />
-              </div>
+            <div class="discussion-field">
+              <label for="discussion-name">Display name</label>
+              <input
+                type="text"
+                id="discussion-name"
+                class="discussion-input"
+                maxlength="60"
+                placeholder="Anonymous"
+              />
+              <span class="discussion-helper">Optional. Leave blank to post anonymously.</span>
             </div>
-            <div class="form-group">
-              <textarea id="discussion-body" rows="4" maxlength="2000" placeholder="Ask anything about this webinar…"></textarea>
+            <div class="discussion-field">
+              <label for="discussion-body">Your question</label>
+              <textarea
+                id="discussion-body"
+                class="discussion-textarea"
+                rows="5"
+                maxlength="2000"
+                placeholder="Ask anything about this webinar. For example: Will the demo cover WhatsApp integration or setup steps?"
+              ></textarea>
             </div>
             <button type="submit" class="btn-form">Post question</button>
             <p id="discussion-msg" class="reg-form-msg" style="display:none;"></p>
@@ -141,11 +154,13 @@ function discussionSection(ev) {
 function discussionReplyForm(threadId) {
   return `
     <form id="reply-form-${threadId}" class="discussion-reply-form" style="display:none;" onsubmit="submitReply(event, '${threadId}')">
-      <div class="form-group">
-        <input type="text" id="reply-name-${threadId}" maxlength="60" placeholder="Name (optional)" />
+      <div class="discussion-field">
+        <label for="reply-name-${threadId}">Display name</label>
+        <input type="text" id="reply-name-${threadId}" class="discussion-input" maxlength="60" placeholder="Anonymous" />
       </div>
-      <div class="form-group">
-        <textarea id="reply-body-${threadId}" rows="3" maxlength="2000" placeholder="Write a reply…"></textarea>
+      <div class="discussion-field">
+        <label for="reply-body-${threadId}">Your reply</label>
+        <textarea id="reply-body-${threadId}" class="discussion-textarea discussion-textarea-sm" rows="3" maxlength="2000" placeholder="Write a helpful reply…"></textarea>
       </div>
       <div class="discussion-reply-actions">
         <button type="submit" class="btn-outline btn-sm">Post reply</button>

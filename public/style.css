@@ -1205,6 +1205,57 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
   font-weight: 800;
   color: var(--accent-dark);
 }
+.discussion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.discussion-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.discussion-field label {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  letter-spacing: 0.02em;
+}
+.discussion-helper {
+  font-size: 0.78rem;
+  color: var(--gray-400);
+}
+.discussion-input,
+.discussion-textarea {
+  width: 100%;
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+  padding: 0.95rem 1rem;
+  font: inherit;
+  color: var(--gray-800);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.discussion-input::placeholder,
+.discussion-textarea::placeholder {
+  color: #94a3b8;
+}
+.discussion-input:focus,
+.discussion-textarea:focus {
+  outline: none;
+  border-color: rgba(249, 115, 22, 0.65);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
+}
+.discussion-textarea {
+  resize: vertical;
+  min-height: 9rem;
+  line-height: 1.65;
+}
+.discussion-textarea-sm {
+  min-height: 6.5rem;
+}
 .discussion-list-head {
   display: flex;
   align-items: center;
