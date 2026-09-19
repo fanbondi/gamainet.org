@@ -16,6 +16,71 @@ const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/aigamnet
 const events = [
   {
     type: 'webinar',
+    title: 'From APIs to LLMs: Building Intelligent Applications',
+    slug: 'from-apis-to-llms-building-intelligent-applications',
+    shortCode: 'apis-llms',
+    theme: 'Build reliable AI apps with LLM APIs, tools, embeddings, RAG, and agents',
+    summary:
+      'A practical walkthrough of how LLM APIs change application design, from structured prompts and tool calling to embeddings, RAG, agents, and production guardrails.',
+    coverImage: '/images/events/joeph-llm-webinar.jpeg',
+    location: 'Online',
+    venue: 'Webinar',
+    timeInfo: 'Date and time to be announced',
+    year: 2026,
+    published: true,
+    featured: true,
+    registrationOpen: true,
+    description: {
+      blocks: [
+        {
+          type: 'paragraph',
+          data: {
+            text: "APIs are the language software uses to talk to itself, but an LLM API breaks many of the assumptions we bring from typical services: it is non-deterministic, priced per token, and can be confidently wrong.",
+          },
+        },
+        {
+          type: 'paragraph',
+          data: {
+            text: 'This talk builds up from that foundation: structuring requests for good output, giving models hands through tool calling, searching by meaning with embeddings, grounding answers in real documents with RAG, and chaining it all into agents that pursue a goal on their own.',
+          },
+        },
+        {
+          type: 'paragraph',
+          data: {
+            text: 'We close with what production actually demands: guardrails against hallucination, prompt injection, and runaway cost, plus the trade-offs between hosted and locally-run models.',
+          },
+        },
+        { type: 'header', data: { text: 'What you will learn', level: 2 } },
+        {
+          type: 'list',
+          data: {
+            style: 'unordered',
+            items: [
+              'How LLM APIs differ from typical deterministic web services',
+              'How to structure requests for clearer, more useful model output',
+              'How tool calling gives models access to external actions and data',
+              'How embeddings and RAG ground answers in real documents',
+              'How agents combine these pieces to pursue goals',
+              'How to think about hallucination, prompt injection, cost, and hosted versus local models in production',
+            ],
+          },
+        },
+      ],
+    },
+    speakers: [
+      {
+        name: 'Joeph',
+        role: 'Speaker',
+        org: '',
+        topic: 'From APIs to LLMs: Building Intelligent Applications',
+        photo: '/images/events/joeph-llm-webinar.jpeg',
+        bio: 'Joeph will guide participants through the practical building blocks of intelligent applications powered by LLMs.',
+      },
+    ],
+    agenda: [],
+  },
+  {
+    type: 'webinar',
     title: 'Building Automated AI Chatbots for Businesses and Government Agencies',
     slug: 'ai-chatbots-businesses-government-webinar',
     shortCode: 'chatbots-jul26',
