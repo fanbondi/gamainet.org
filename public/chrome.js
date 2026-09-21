@@ -3,10 +3,11 @@ const SITE_NAV = [
   {
     href: '/programs.html',
     label: 'Programs',
-    match: (p) => ['/programs', '/indabax', '/meetups', '/webinars', '/event'].some((x) => p.startsWith(x)),
+    match: (p) => ['/programs', '/indabax', '/ioai', '/meetups', '/webinars', '/event'].some((x) => p.startsWith(x)),
     children: [
       { href: '/programs.html', label: 'All programs' },
       { href: '/indabax.html', label: 'IndabaX' },
+      { href: '/ioai.html', label: 'IOAI selection' },
       { href: '/meetups.html', label: 'Meetups' },
       { href: '/webinars.html', label: 'Webinars' },
     ],
@@ -97,6 +98,7 @@ function renderSiteFooter() {
             <h4>Explore</h4>
             <ul>
               <li><a href="/programs.html">Programs</a></li>
+              <li><a href="/ioai.html">IOAI selection</a></li>
               <li><a href="/blog.html">Blog</a></li>
               <li><a href="/about.html">About</a></li>
               ${joinLink}

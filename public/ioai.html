@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IOAI National Selection - AI-GAMNET</title>
+  <meta name="description" content="AI-GAMNET's public information page for The Gambia's International Olympiad in Artificial Intelligence national selection process." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="editor-toolbar" class="editor-toolbar" style="display:none;"><div class="editor-toolbar-inner"><span class="editor-label">Edit mode</span><div class="editor-actions"><button id="save-btn" onclick="saveContent()">Save</button><button id="exit-btn" onclick="exitEditMode()">Exit</button></div></div></div>
+  <button id="admin-trigger" class="admin-trigger" onclick="enterEditMode()" title="Edit site">&#9881;</button>
+  <div id="login-modal" class="modal-overlay" style="display:none;"><div class="modal-box"><h2>Admin login</h2><input type="password" id="admin-password" onkeydown="if(event.key==='Enter') checkLogin()" /><div class="modal-actions"><button onclick="checkLogin()">Login</button><button class="cancel" onclick="document.getElementById('login-modal').style.display='none'">Cancel</button></div><p id="login-error" style="color:#EF4444;display:none;">Incorrect password.</p></div></div>
+
+  <div id="site-header"></div>
+
+  <header class="page-hero-img" style="background-image:linear-gradient(rgba(15,23,42,0.72),rgba(30,58,95,0.78)),url('/images/home/african-classroom.jpg');">
+    <div class="container">
+      <span class="hero-eyebrow" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);color:#fff;">Student pathway</span>
+      <h1 class="editable" data-key="ioai-title">IOAI National Selection</h1>
+      <p class="editable" data-key="ioai-sub">Public information for The Gambia's selection process for the International Olympiad in Artificial Intelligence.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container ioai-shell">
+      <aside class="ioai-sidebar" aria-label="IOAI page sections">
+        <a href="#overview">Overview</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#participate">How to participate</a>
+        <a href="#criteria">Selection criteria</a>
+        <a href="#fees">Fees</a>
+        <a href="#previous-cycles">Previous cycles</a>
+        <a href="#updates">Updates</a>
+      </aside>
+
+      <main class="ioai-content">
+        <section id="overview" class="ioai-panel">
+          <p class="section-eyebrow">Accredited organization</p>
+          <h2 class="editable" data-key="ioai-overview-title">Transparent national selection for IOAI</h2>
+          <p class="editable" data-key="ioai-overview-body">AI-GAMNET maintains this page so students, parents, teachers, and partners can understand how The Gambia's IOAI team is selected. This page should be updated every cycle and archived after each cycle concludes.</p>
+          <div class="ioai-status-grid">
+            <div><span>Current cycle</span><strong class="editable" data-key="ioai-cycle">2026</strong></div>
+            <div><span>Status</span><strong class="editable" data-key="ioai-status">Planning</strong></div>
+            <div><span>Contact</span><strong><a href="mailto:info@gamainet.org">info@gamainet.org</a></strong></div>
+          </div>
+        </section>
+
+        <section id="timeline" class="ioai-panel">
+          <p class="section-eyebrow">National selection process</p>
+          <h2 class="editable" data-key="ioai-timeline-title">Timeline</h2>
+          <div class="ioai-timeline">
+            <div class="ioai-step"><span>1</span><div><strong class="editable" data-key="ioai-tl1-title">Registration opens</strong><p class="editable" data-key="ioai-tl1-body">Date to be announced. Registration details and links will be published here.</p></div></div>
+            <div class="ioai-step"><span>2</span><div><strong class="editable" data-key="ioai-tl2-title">Qualifying round</strong><p class="editable" data-key="ioai-tl2-body">Date to be announced. The qualifying round may include written, coding, mathematics, statistics, or machine learning tasks.</p></div></div>
+            <div class="ioai-step"><span>3</span><div><strong class="editable" data-key="ioai-tl3-title">Training and selection camp</strong><p class="editable" data-key="ioai-tl3-body">Dates to be announced. Shortlisted students may be invited for training, mentoring, and further assessment.</p></div></div>
+            <div class="ioai-step"><span>4</span><div><strong class="editable" data-key="ioai-tl4-title">Final team announcement</strong><p class="editable" data-key="ioai-tl4-body">The national team and reserves, if any, will be announced before the IOAI competition date.</p></div></div>
+          </div>
+        </section>
+
+        <section id="participate" class="ioai-panel">
+          <p class="section-eyebrow">Participation</p>
+          <h2 class="editable" data-key="ioai-participate-title">How to participate</h2>
+          <div class="ioai-two-col">
+            <div>
+              <h3>Eligibility</h3>
+              <ul class="check-list">
+                <li class="editable" data-key="ioai-elig-1">Open to eligible students representing The Gambia.</li>
+                <li class="editable" data-key="ioai-elig-2">Age, grade level, citizenship, residency, and school requirements will be published for each cycle.</li>
+                <li class="editable" data-key="ioai-elig-3">The process is intended to be nationally inclusive and accessible to students regardless of social status.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Registration</h3>
+              <p class="editable" data-key="ioai-registration-body">Registration instructions, deadlines, and forms will be published on this page when the current cycle opens. Questions can be sent to info@gamainet.org.</p>
+              <a href="mailto:info@gamainet.org" class="btn-outline">Ask a question</a>
+            </div>
+          </div>
+        </section>
+
+        <section id="criteria" class="ioai-panel">
+          <p class="section-eyebrow">Transparency</p>
+          <h2 class="editable" data-key="ioai-criteria-title">Selection criteria</h2>
+          <p class="editable" data-key="ioai-criteria-body">Candidates will be evaluated using criteria published for the active cycle. These may include written problem solving, coding, data analysis, machine learning tasks, interviews, training participation, or a final selection test.</p>
+          <div class="ioai-note-list">
+            <div><strong>Advancement</strong><p class="editable" data-key="ioai-advancement">Weightings, thresholds, or advancement rules will be published before each round where applicable.</p></div>
+            <div><strong>Results</strong><p class="editable" data-key="ioai-results">Results for each stage of the national selection process will be made available in an appropriate format.</p></div>
+            <div><strong>Final team</strong><p class="editable" data-key="ioai-final-team">The final IOAI team and any reserves will be determined from the published process for the current cycle.</p></div>
+          </div>
+        </section>
+
+        <section id="fees" class="ioai-panel">
+          <p class="section-eyebrow">Access</p>
+          <h2 class="editable" data-key="ioai-fees-title">Fees and financial support</h2>
+          <p class="editable" data-key="ioai-fees-body">Participation is free of charge unless a cycle-specific notice states that a nominal fee is required only to offset direct costs such as accommodation, travel, or competition expenses. No institution or individual should charge fees with the intent to profit from the selection process.</p>
+          <ul class="check-list">
+            <li class="editable" data-key="ioai-fee-1">Any participation, registration, or training-camp fees will be disclosed for each round.</li>
+            <li class="editable" data-key="ioai-fee-2">Fee waivers, scholarships, or financial assistance will be listed when available.</li>
+            <li class="editable" data-key="ioai-fee-3">The selection process should remain accessible to students across the country.</li>
+          </ul>
+        </section>
+
+        <section id="previous-cycles" class="ioai-panel">
+          <p class="section-eyebrow">Archive</p>
+          <h2 class="editable" data-key="ioai-archive-title">Previous participation cycles</h2>
+          <div class="ioai-archive-card">
+            <h3 class="editable" data-key="ioai-archive-cycle">No previous IOAI cycle has been published yet</h3>
+            <p class="editable" data-key="ioai-archive-body">After each cycle, AI-GAMNET will archive the selection summary, participating students or participant count, IOAI results, and grant or sponsor acknowledgements here.</p>
+          </div>
+        </section>
+
+        <section id="updates" class="ioai-panel">
+          <p class="section-eyebrow">Updates</p>
+          <h2 class="editable" data-key="ioai-updates-title">Changelog</h2>
+          <div class="ioai-changelog">
+            <div><time datetime="2026-09-21">21 September 2026</time><p class="editable" data-key="ioai-change-1">Initial IOAI national selection information page created.</p></div>
+          </div>
+          <p class="ioai-contact-note">For questions about IOAI selection, email <a href="mailto:info@gamainet.org">info@gamainet.org</a>.</p>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <section class="cta-banner" style="background-image:linear-gradient(rgba(15,23,42,0.8),rgba(15,23,42,0.84)),url('/images/home/cta-banner.jpg');">
+    <div class="container">
+      <h2 class="editable" data-key="ioai-cta-title">Preparing students for global AI competition</h2>
+      <p class="editable" data-key="ioai-cta-sub">Teachers, schools, sponsors, and volunteers can contact AI-GAMNET to support a fair and inclusive national selection process.</p>
+      <div class="cta-actions">
+        <a href="mailto:info@gamainet.org" class="btn-primary btn-lg">Contact AI-GAMNET</a>
+        <a href="/programs.html" class="btn-ghost">View programs</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+  <script src="/chrome.js"></script>
+  <script src="/editor.js"></script><script src="/main.js"></script>
+</body>
+</html>

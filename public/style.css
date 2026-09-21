@@ -658,6 +658,7 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
   color: var(--gray-600);
 }
 .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.programs-hub-grid { grid-template-columns: repeat(4, 1fr); }
 .hub-card {
   background: #fff;
   border-radius: var(--radius-lg);
@@ -956,9 +957,133 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
 .page-hero-img h1 { color: #fff; }
 .page-hero-img p { color: rgba(255,255,255,0.88) !important; margin-left: auto; margin-right: auto; }
 
+/* ---- IOAI selection page ---- */
+.ioai-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.ioai-sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + 1rem);
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.ioai-sidebar a {
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.ioai-sidebar a:hover { background: var(--gray-100); color: var(--accent-dark); }
+.ioai-content { display: grid; gap: 1.25rem; }
+.ioai-panel {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 6px 28px rgba(15, 23, 42, 0.08);
+}
+.ioai-panel h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 900;
+  color: var(--accent-dark);
+  line-height: 1.15;
+  margin-bottom: 0.85rem;
+}
+.ioai-panel h3 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--accent-dark);
+  margin-bottom: 0.6rem;
+}
+.ioai-panel p { color: var(--gray-600); line-height: 1.75; }
+.ioai-status-grid,
+.ioai-note-list,
+.ioai-two-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+.ioai-two-col { grid-template-columns: 1fr 1fr; }
+.ioai-status-grid > div,
+.ioai-note-list > div,
+.ioai-archive-card,
+.ioai-changelog > div {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1rem;
+  background: var(--off-white);
+}
+.ioai-status-grid span,
+.ioai-changelog time {
+  display: block;
+  color: var(--gray-600);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ioai-status-grid strong {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--accent-dark);
+  font-size: 1.05rem;
+}
+.ioai-status-grid a,
+.ioai-contact-note a { color: var(--primary); }
+.ioai-timeline {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+.ioai-step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.ioai-step > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 107, 53, 0.12);
+  color: var(--primary);
+  font-weight: 900;
+}
+.ioai-step strong {
+  display: block;
+  color: var(--accent-dark);
+  font-family: var(--font-heading);
+  margin-bottom: 0.2rem;
+}
+.ioai-changelog {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.ioai-contact-note { margin-top: 1rem; font-weight: 700; }
+
 @media (max-width: 980px) {
   .feature-grid { grid-template-columns: 1fr; }
   .impact-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem 1rem; }
+  .programs-hub-grid { grid-template-columns: repeat(2, 1fr); }
+  .ioai-shell { grid-template-columns: 1fr; }
+  .ioai-sidebar { position: static; grid-template-columns: repeat(2, 1fr); }
+  .ioai-status-grid,
+  .ioai-note-list { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
   .intro-grid, .hub-grid { grid-template-columns: 1fr; }
@@ -1006,6 +1131,10 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
   .section { padding: 3.5rem 0; }
   .join-form-card { padding: 1.25rem; }
   .page-hero-img { padding: calc(var(--nav-h) + 2.5rem) 0 2.5rem; }
+  .ioai-two-col { grid-template-columns: 1fr; }
+  .ioai-panel { padding: 1.35rem; }
+  .ioai-sidebar { grid-template-columns: 1fr; }
+  .programs-hub-grid { grid-template-columns: 1fr; }
 }
 
 /* =============================================
