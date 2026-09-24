@@ -7,7 +7,7 @@ const SITE_NAV = [
     children: [
       { href: '/programs.html', label: 'All programs' },
       { href: '/indabax.html', label: 'IndabaX' },
-      { href: '/ioai.html', label: 'IOAI selection' },
+      { href: '/ioai.html', label: 'IOAI competition' },
       { href: '/meetups.html', label: 'Meetups' },
       { href: '/webinars.html', label: 'Webinars' },
     ],
@@ -98,7 +98,7 @@ function renderSiteFooter() {
             <h4>Explore</h4>
             <ul>
               <li><a href="/programs.html">Programs</a></li>
-              <li><a href="/ioai.html">IOAI selection</a></li>
+              <li><a href="/ioai.html">IOAI competition</a></li>
               <li><a href="/blog.html">Blog</a></li>
               <li><a href="/about.html">About</a></li>
               ${joinLink}
