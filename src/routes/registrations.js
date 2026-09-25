@@ -3,6 +3,9 @@ const ProgramEvent = require('../models/ProgramEvent');
 const Registration = require('../models/Registration');
 const { requireAuth } = require('../middleware/auth');
 const { sendRegistrationConfirmation } = require('../utils/mail');
+const { createRateLimiter, isSingleEmailAddress, normalizeEmailAddress } = require('../utils/email-validation');
+
+const registrationRateLimiter = createRateLimiter({ windowMs: 60_000, max: 5 });
 
 const router = express.Router();
 
@@ -18,6 +21,14 @@ router.post('/', async (req, res) => {
         .json({ success: false, message: 'Event, name, and email are required.' });
     }
 
+    const clientIp = String(req.ip || req.headers['x-forwarded-for'] || 'unknown').trim() || 'unknown';
+    if (!registrationRateLimiter(clientIp)) {
+      return res.status(429).json({
+        success: false,
+        message: 'Too many registration attempts. Please wait a minute and try again.',
+      });
+    }
+
     const event = await ProgramEvent.findById(eventId).lean();
     if (!event || !event.published) {
       return res.status(404).json({ success: false, message: 'Event not found.' });
@@ -27,7 +38,10 @@ router.post('/', async (req, res) => {
     }
 
     const trimmedName = String(name).trim();
-    const trimmedEmail = String(email).toLowerCase().trim();
+    const trimmedEmail = normalizeEmailAddress(email);
+    if (!isSingleEmailAddress(trimmedEmail)) {
+      return res.status(400).json({ success: false, message: 'Please provide a valid email address.' });
+    }
 
     await Registration.create({
       event: event._id,

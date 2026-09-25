@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Member = require('../models/Member');
 const { sendMembershipConfirmation } = require('../utils/mail');
+const { createRateLimiter, isSingleEmailAddress, normalizeEmailAddress } = require('../utils/email-validation');
+
+const membershipRateLimiter = createRateLimiter({ windowMs: 60_000, max: 3 });
 
 Member.createIndexes().catch(() => {});
 
@@ -12,8 +15,19 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Name and email are required.' });
     }
 
+    const clientIp = String(req.ip || req.headers['x-forwarded-for'] || 'unknown').trim() || 'unknown';
+    if (!membershipRateLimiter(clientIp)) {
+      return res.status(429).json({
+        success: false,
+        message: 'Too many signup attempts. Please wait a minute and try again.',
+      });
+    }
+
     const trimmedName = String(name).trim();
-    const trimmedEmail = String(email).toLowerCase().trim();
+    const trimmedEmail = normalizeEmailAddress(email);
+    if (!isSingleEmailAddress(trimmedEmail)) {
+      return res.status(400).json({ success: false, message: 'Please provide a valid email address.' });
+    }
 
     await Member.create({
       name: trimmedName,
