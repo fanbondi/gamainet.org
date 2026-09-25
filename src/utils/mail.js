@@ -96,6 +96,39 @@ async function sendRegistrationConfirmation({ to, name, event }) {
   return true;
 }
 
+async function sendMembershipConfirmation({ to, name }) {
+  const transport = getTransporter();
+  if (!transport) {
+    console.warn(`SMTP not configured — skipping membership email to ${to}`);
+    return false;
+  }
+
+  const from = process.env.MAIL_FROM || process.env.SMTP_USER || 'info@gamainet.org';
+  const subject = 'Welcome to AI-GAMNET';
+  const text = [
+    `Hi ${name},`,
+    '',
+    'Thank you for joining AI-GAMNET. Your community registration was successful.',
+    '',
+    'We are delighted to have you in Gambia\'s AI community and will keep you informed about upcoming events, learning opportunities, and ways to get involved.',
+    '',
+    'Questions? Reply to this email or contact info@gamainet.org',
+    '',
+    '— AI-GAMNET / Gamainet.org',
+  ].join('\n');
+  const html = `
+    <div style="font-family:Inter,Arial,sans-serif;max-width:560px;color:#0f172a;line-height:1.6;">
+      <p>Hi ${escapeHtml(name)},</p>
+      <p>Thank you for joining <strong>AI-GAMNET</strong>. Your community registration was successful.</p>
+      <p>We are delighted to have you in Gambia's AI community and will keep you informed about upcoming events, learning opportunities, and ways to get involved.</p>
+      <p style="margin-top:1.5rem;font-size:0.9rem;color:#64748b;">Questions? Contact <a href="mailto:info@gamainet.org">info@gamainet.org</a></p>
+      <p style="font-size:0.85rem;color:#94a3b8;">— AI-GAMNET / Gamainet.org</p>
+    </div>`;
+
+  await transport.sendMail({ from, to, subject, text, html });
+  return true;
+}
+
 function escapeHtml(s) {
   return String(s || '')
     .replace(/&/g, '&amp;')
@@ -104,4 +137,4 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
-module.exports = { sendRegistrationConfirmation, isMailConfigured };
+module.exports = { sendRegistrationConfirmation, sendMembershipConfirmation, isMailConfigured };
