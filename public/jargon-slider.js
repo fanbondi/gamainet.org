@@ -59,9 +59,9 @@ function renderJargonSlide(index) {
   }).join('');
 
   panel.innerHTML = `
-    <p class="jargon-term-label">${item.term}</p>
-    <h3 class="jargon-term-title">${item.subtitle}</h3>
-    <p class="jargon-term-body">${item.body}</p>
+    <span class="hero-event-spotlight-tag">${item.term}</span>
+    <strong>${item.subtitle}</strong>
+    <span class="hero-jargon-desc">${item.body}</span>
   `;
 }
 

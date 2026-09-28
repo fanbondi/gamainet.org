@@ -50,10 +50,27 @@
         data-img-key="hero-primary"
       />
       <div class="hero-pro-banner-overlay" aria-hidden="true"></div>
-      <div id="hero-event-spotlight" class="hero-event-spotlight-wrap">
-        <div class="float-card" id="hero-float-fallback">
-          <div class="dot">🚀</div>
-          <div><strong>AI-GAMNET Events</strong><span>Webinars, meetups, IOAI &amp; IndabaX</span></div>
+      <div class="hero-banner-cards">
+        <div class="hero-event-spotlight-wrap">
+          <div id="hero-event-spotlight">
+            <div class="float-card" id="hero-float-fallback">
+              <div class="dot">🚀</div>
+              <div><strong>AI-GAMNET Events</strong><span>Webinars, meetups, IOAI &amp; IndabaX</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-jargon-spotlight" id="jargon-slider" aria-label="Tech terms">
+          <div class="hero-jargon-spotlight-row">
+            <div class="hero-jargon-dot" aria-hidden="true">💡</div>
+            <div class="hero-jargon-spotlight-body" id="jargon-panel" role="tabpanel" aria-live="polite"></div>
+          </div>
+          <div class="jargon-nav jargon-nav-compact">
+            <button type="button" class="jargon-arrow" onclick="stepJargon(-1)" aria-label="Previous term">←</button>
+            <div class="jargon-tabs-wrap">
+              <div class="jargon-tabs" id="jargon-tabs" role="tablist"></div>
+            </div>
+            <button type="button" class="jargon-arrow" onclick="stepJargon(1)" aria-label="Next term">→</button>
+          </div>
         </div>
       </div>
     </div>
@@ -64,26 +81,6 @@
       <div class="hero-pro-actions">
         <a href="/join.html" class="btn-primary btn-lg">Join the Network</a>
         <a href="/programs.html" class="btn-outline btn-lg">Explore Programs</a>
-      </div>
-
-      <div class="hero-jargon" id="jargon-slider" aria-labelledby="jargon-heading">
-        <div class="hero-jargon-head">
-          <div>
-            <p class="hero-jargon-eyebrow editable" data-key="jargon-eyebrow">Quick guide</p>
-            <h2 class="hero-jargon-title editable" data-key="jargon-title" id="jargon-heading">AI terms in plain English</h2>
-          </div>
-          <p class="hero-jargon-hint editable" data-key="jargon-sub">Tap a term below</p>
-        </div>
-        <div class="jargon-shell">
-          <div class="jargon-nav">
-            <button type="button" class="jargon-arrow" onclick="stepJargon(-1)" aria-label="Previous term">←</button>
-            <div class="jargon-tabs-wrap">
-              <div class="jargon-tabs" id="jargon-tabs" role="tablist"></div>
-            </div>
-            <button type="button" class="jargon-arrow" onclick="stepJargon(1)" aria-label="Next term">→</button>
-          </div>
-          <div class="jargon-panel" id="jargon-panel" role="tabpanel" aria-live="polite"></div>
-        </div>
       </div>
 
       <div class="hero-pro-meta">
