@@ -31,7 +31,7 @@ async function loadPost() {
       return;
     }
     const p = data.post;
-    document.title = `${p.title} — AI-GAMNET`;
+    document.title = `${p.title} | AI-GAMNET`;
     const blocks = p.content?.blocks || [];
     root.innerHTML = `
       <p style="color:var(--primary);font-size:0.8rem;font-weight:700;text-transform:uppercase;">${p.year}</p>

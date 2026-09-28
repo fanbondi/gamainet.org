@@ -720,7 +720,7 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
 }
 .hero-pro-body {
   padding: 3rem 0 4rem;
-  max-width: 720px;
+  max-width: min(840px, 100%);
 }
 .hero-pro-grid {
   display: grid;
@@ -1542,6 +1542,156 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
 }
 .home-events-section .event-grid { margin-top: 0.5rem; }
 
+/* AI jargon slider (home hero) */
+.hero-jargon {
+  margin-top: 2.25rem;
+  width: 100%;
+}
+.hero-jargon-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+}
+.hero-jargon-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 0.25rem;
+}
+.hero-jargon-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 3.5vw, 1.45rem);
+  font-weight: 800;
+  color: var(--accent-dark);
+  margin: 0;
+  line-height: 1.25;
+}
+.hero-jargon-hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--gray-600);
+  font-weight: 600;
+}
+.hero-jargon .jargon-shell {
+  margin: 0;
+}
+.jargon-shell {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.jargon-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-bottom: 1px solid var(--gray-200);
+  background: var(--white);
+}
+.jargon-arrow {
+  flex: 0 0 44px;
+  border: none;
+  background: transparent;
+  color: var(--gray-600);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.jargon-arrow:hover { background: var(--gray-100); color: var(--accent-dark); }
+.jargon-tabs-wrap {
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.jargon-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  padding: 0.65rem 0.5rem;
+  min-width: min-content;
+}
+.jargon-tab {
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-700);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+.jargon-tab:hover { border-color: var(--primary); color: var(--primary); }
+.jargon-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
+}
+.jargon-panel {
+  padding: 1.75rem 1.5rem 2rem;
+  min-height: 11rem;
+}
+.jargon-term-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 0.35rem;
+}
+.jargon-term-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--accent-dark);
+  margin: 0 0 0.75rem;
+  line-height: 1.3;
+}
+.jargon-term-body {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--gray-700);
+  max-width: 62ch;
+}
+
+@media (max-width: 640px) {
+  .hero-jargon { margin-top: 1.75rem; }
+  .hero-jargon-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+  .hero-jargon-hint { font-size: 0.78rem; }
+  .jargon-nav { align-items: stretch; }
+  .jargon-arrow {
+    flex: 0 0 48px;
+    min-height: 48px;
+    font-size: 1.25rem;
+  }
+  .jargon-tabs { padding: 0.5rem 0.35rem; }
+  .jargon-tab {
+    font-size: 0.72rem;
+    padding: 0.55rem 0.8rem;
+    min-height: 44px;
+  }
+  .jargon-panel {
+    padding: 1.15rem 1rem 1.35rem;
+    min-height: 0;
+  }
+  .jargon-term-title { font-size: 1.12rem; }
+  .jargon-term-body { font-size: 0.94rem; line-height: 1.65; max-width: none; }
+}
+
 @media (max-width: 900px) {
   .event-hero-pro-grid { grid-template-columns: 1fr; }
   .event-hero-pro-visual { order: -1; position: static; }
@@ -1699,6 +1849,8 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
 .reg-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
 .reg-table th, .reg-table td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--gray-200); }
 .reg-table th { color: var(--gray-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.reg-table .reg-actions { white-space: nowrap; text-align: right; }
+.reg-table .reg-actions .btn-sm { margin-left: 0.35rem; padding: 0.25rem 0.55rem; font-size: 0.75rem; }
 .reg-list .empty { color: var(--gray-400); padding: 1rem 0; }
 
 @media (max-width: 860px) {

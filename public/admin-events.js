@@ -112,7 +112,7 @@ async function uploadCover(input) {
   if (!input.files || !input.files[0]) return;
   const file = input.files[0];
   if (file.size > 10 * 1024 * 1024) {
-    setCoverUploadStatus('File too large — max 10MB.', true);
+    setCoverUploadStatus('File too large, max 10MB.', true);
     input.value = '';
     return;
   }
@@ -138,11 +138,11 @@ async function uploadCover(input) {
     renderCoverPreview(data.url);
 
     if (editingId) {
-      setCoverUploadStatus('Cover uploaded — saving event…');
+      setCoverUploadStatus('Cover uploaded, saving event…');
       await saveEvent({ silent: true });
       setCoverUploadStatus('Cover saved.');
     } else {
-      setCoverUploadStatus('Cover uploaded — save the event to keep it.');
+      setCoverUploadStatus('Cover uploaded, save the event to keep it.');
     }
   } catch (err) {
     console.error('uploadCover failed:', err);
@@ -361,7 +361,7 @@ async function editEvent(id) {
 async function saveEvent(opts = {}) {
   const msg = document.getElementById('save-msg');
   if (!editor) {
-    const text = 'Editor still loading — wait a moment and try again.';
+    const text = 'Editor still loading, wait a moment and try again.';
     if (!opts.silent) {
       msg.textContent = text;
       msg.className = 'save-msg err';
@@ -453,7 +453,7 @@ async function saveEvent(opts = {}) {
   } catch (err) {
     console.error('Save event failed:', err);
     if (!opts.silent) {
-      msg.textContent = err.message || 'Save failed — check your connection and try again.';
+      msg.textContent = err.message || 'Save failed, check your connection and try again.';
       msg.className = 'save-msg err';
     }
     throw err;
@@ -483,15 +483,90 @@ async function loadRegistrations(id) {
   }
   list.innerHTML = `
     <table class="reg-table">
-      <thead><tr><th>Name</th><th>Email</th><th>Org</th><th>Role</th><th>When</th></tr></thead>
+      <thead><tr><th>Name</th><th>Email</th><th>Org</th><th>Role</th><th>When</th><th></th></tr></thead>
       <tbody>
         ${currentRegs
           .map(
-            (r) => `<tr><td>${esc(r.name)}</td><td>${esc(r.email)}</td><td>${esc(r.organisation)}</td><td>${esc(r.role)}</td><td>${new Date(r.createdAt).toLocaleDateString()}</td></tr>`
+            (r) => `<tr>
+              <td>${esc(r.name)}</td>
+              <td>${esc(r.email)}</td>
+              <td>${esc(r.organisation)}</td>
+              <td>${esc(r.role)}</td>
+              <td>${new Date(r.createdAt).toLocaleDateString()}</td>
+              <td class="reg-actions">
+                <button type="button" class="btn-outline btn-sm" onclick="openRegEditModal('${r._id}')">Edit</button>
+                <button type="button" class="btn-remove btn-sm" onclick="deleteRegistration('${r._id}')">Delete</button>
+              </td>
+            </tr>`
           )
           .join('')}
       </tbody>
     </table>`;
+}
+
+function openRegEditModal(id) {
+  const r = currentRegs.find((x) => x._id === id);
+  if (!r) return;
+  document.getElementById('reg-edit-id').value = id;
+  document.getElementById('reg-edit-name').value = r.name || '';
+  document.getElementById('reg-edit-email').value = r.email || '';
+  document.getElementById('reg-edit-org').value = r.organisation || '';
+  document.getElementById('reg-edit-role').value = r.role || '';
+  document.getElementById('reg-edit-phone').value = r.phone || '';
+  document.getElementById('reg-edit-notes').value = r.notes || '';
+  const msg = document.getElementById('reg-edit-msg');
+  msg.textContent = '';
+  msg.className = 'save-msg';
+  document.getElementById('reg-edit-modal').style.display = 'flex';
+}
+
+function closeRegEditModal() {
+  document.getElementById('reg-edit-modal').style.display = 'none';
+}
+
+async function saveRegistrationEdit() {
+  const id = document.getElementById('reg-edit-id').value;
+  const msg = document.getElementById('reg-edit-msg');
+  const body = {
+    name: document.getElementById('reg-edit-name').value.trim(),
+    email: document.getElementById('reg-edit-email').value.trim(),
+    organisation: document.getElementById('reg-edit-org').value.trim(),
+    role: document.getElementById('reg-edit-role').value.trim(),
+    phone: document.getElementById('reg-edit-phone').value.trim(),
+    notes: document.getElementById('reg-edit-notes').value.trim(),
+  };
+  try {
+    const res = await fetch(`/api/registrations/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!data.success) {
+      msg.textContent = data.message || 'Update failed.';
+      msg.className = 'save-msg err';
+      return;
+    }
+    closeRegEditModal();
+    if (editingId) loadRegistrations(editingId);
+  } catch (err) {
+    msg.textContent = 'Update failed, check your connection.';
+    msg.className = 'save-msg err';
+  }
+}
+
+async function deleteRegistration(id) {
+  const r = currentRegs.find((x) => x._id === id);
+  const label = r ? `${r.name} (${r.email})` : 'this registrant';
+  if (!confirm(`Remove ${label} from this event?`)) return;
+  const res = await fetch(`/api/registrations/${id}`, { method: 'DELETE', credentials: 'include' });
+  const data = await res.json();
+  if (!data.success) {
+    alert(data.message || 'Delete failed.');
+    return;
+  }
+  if (editingId) loadRegistrations(editingId);
 }
 
 function exportRegistrations() {

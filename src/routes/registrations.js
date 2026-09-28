@@ -99,4 +99,62 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
+// PUT /api/registrations/:id — admin update registrant
+router.put('/:id', requireAuth, async (req, res) => {
+  try {
+    const { name, email, organisation, role, phone, notes } = req.body;
+    const reg = await Registration.findById(req.params.id);
+    if (!reg) {
+      return res.status(404).json({ success: false, message: 'Registration not found.' });
+    }
+
+    if (name !== undefined) {
+      const trimmedName = String(name).trim();
+      if (!trimmedName) {
+        return res.status(400).json({ success: false, message: 'Name is required.' });
+      }
+      reg.name = trimmedName;
+    }
+
+    if (email !== undefined) {
+      const trimmedEmail = normalizeEmailAddress(email);
+      if (!isSingleEmailAddress(trimmedEmail)) {
+        return res.status(400).json({ success: false, message: 'Please provide a valid email address.' });
+      }
+      reg.email = trimmedEmail;
+    }
+
+    if (organisation !== undefined) reg.organisation = String(organisation).trim();
+    if (role !== undefined) reg.role = String(role).trim();
+    if (phone !== undefined) reg.phone = String(phone).trim();
+    if (notes !== undefined) reg.notes = String(notes).trim();
+
+    await reg.save();
+    res.json({ success: true, registration: reg.toObject() });
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: 'Another registration for this event already uses that email.',
+      });
+    }
+    console.error('PUT /api/registrations/:id error:', err);
+    res.status(500).json({ success: false, message: 'Failed to update registration.' });
+  }
+});
+
+// DELETE /api/registrations/:id — admin remove registrant
+router.delete('/:id', requireAuth, async (req, res) => {
+  try {
+    const reg = await Registration.findByIdAndDelete(req.params.id);
+    if (!reg) {
+      return res.status(404).json({ success: false, message: 'Registration not found.' });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('DELETE /api/registrations/:id error:', err);
+    res.status(500).json({ success: false, message: 'Failed to delete registration.' });
+  }
+});
+
 module.exports = router;

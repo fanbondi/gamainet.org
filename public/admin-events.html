@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Events Admin — AI-GAMNET</title>
+  <title>Events Admin | AI-GAMNET</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -89,7 +89,7 @@
             <label>End date <input type="date" id="ev-end" /></label>
           </div>
           <div class="form-row">
-            <label>Time info <input id="ev-time" placeholder="e.g. 08:30 – 17:00" /></label>
+            <label>Time info <input id="ev-time" placeholder="e.g. 08:30 to 17:00" /></label>
             <label>Location <input id="ev-location" placeholder="e.g. Kanifing, The Gambia" /></label>
           </div>
           <label>Venue
@@ -111,7 +111,7 @@
 
         <div class="admin-card">
           <h3>Full description</h3>
-          <p class="hint">Rich text — headings, paragraphs, lists, quotes. Click inside the box below to type.</p>
+          <p class="hint">Rich text, headings, paragraphs, lists, quotes. Click inside the box below to type.</p>
           <p id="editor-status" class="hint" style="margin-top:0.5rem;"></p>
           <div id="editorjs" class="editor-holder"></div>
         </div>
@@ -139,10 +139,10 @@
             <label class="check"><input type="checkbox" id="ev-published" /> Published (visible on site)</label>
             <label class="check"><input type="checkbox" id="ev-featured" /> Featured</label>
           </div>
-          <label>External registration URL (optional — overrides internal form)
+          <label>External registration URL (optional, overrides internal form)
             <input id="ev-extreg" placeholder="https://..." />
           </label>
-          <label>Online meeting link (optional — emailed to registrants &amp; shown on event page)
+          <label>Online meeting link (optional, emailed to registrants &amp; shown on event page)
             <input id="ev-meeting" placeholder="https://meet.google.com/..." />
           </label>
           <div class="form-actions">
@@ -160,6 +160,36 @@
           <div id="reg-list" class="reg-list"></div>
         </div>
       </main>
+    </div>
+  </div>
+
+  <div id="reg-edit-modal" class="modal-overlay" style="display:none;" role="dialog" aria-labelledby="reg-edit-title">
+    <div class="modal-box" style="max-width:480px;">
+      <h2 id="reg-edit-title">Edit registration</h2>
+      <input type="hidden" id="reg-edit-id" />
+      <label>Name
+        <input id="reg-edit-name" />
+      </label>
+      <label>Email
+        <input id="reg-edit-email" type="email" />
+      </label>
+      <label>Organisation
+        <input id="reg-edit-org" />
+      </label>
+      <label>Role
+        <input id="reg-edit-role" />
+      </label>
+      <label>Phone
+        <input id="reg-edit-phone" />
+      </label>
+      <label>Notes
+        <textarea id="reg-edit-notes" rows="2"></textarea>
+      </label>
+      <p id="reg-edit-msg" class="save-msg"></p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="saveRegistrationEdit()">Save</button>
+        <button class="cancel" onclick="closeRegEditModal()">Cancel</button>
+      </div>
     </div>
   </div>
 

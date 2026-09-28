@@ -1,5 +1,5 @@
 /**
- * UDP WYSIWYG INLINE EDITOR — API-backed version
+ * UDP WYSIWYG INLINE EDITOR, API-backed version
  * Content is saved to MongoDB via the Express backend.
  * Admin session is maintained server-side.
  * Image uploads go to /api/upload and are served from /uploads/
@@ -144,7 +144,7 @@ function activateEditor(showHint = true) {
   // Make images clickable to change
   addImageOverlays();
 
-  if (showHint) showToast('✏️ Edit mode active — click highlighted text or images to edit');
+  if (showHint) showToast('✏️ Edit mode active, click highlighted text or images to edit');
 }
 
 // ── Exit Edit Mode ──────────────────────────────────────────────
@@ -350,7 +350,7 @@ async function deleteImage(e, id) {
 }
 
 // ── Image Library Button (floating in edit mode) ────────────────
-// Inject via CSS — .edit-toolbar images button
+// Inject via CSS, .edit-toolbar images button
 
 // ── Toast notifications ─────────────────────────────────────────
 function showToast(msg, isError = false) {

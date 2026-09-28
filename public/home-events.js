@@ -18,9 +18,9 @@ function fmtDateRange(start, end) {
   if (s.toDateString() === e.toDateString()) return s.toLocaleDateString('en-GB', opts);
   const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
   if (sameMonth) {
-    return `${s.getDate()}–${e.getDate()} ${e.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`;
+    return `${s.getDate()} to ${e.getDate()} ${e.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`;
   }
-  return `${s.toLocaleDateString('en-GB', opts)} – ${e.toLocaleDateString('en-GB', opts)}`;
+  return `${s.toLocaleDateString('en-GB', opts)} to ${e.toLocaleDateString('en-GB', opts)}`;
 }
 
 function eventCard(ev) {
@@ -72,6 +72,8 @@ async function loadHomeEvents() {
       res = await fetch('/api/events?upcoming=true');
       data = await res.json();
       events = (data.events || []).slice(0, 3);
+    } else {
+      events = events.slice(0, 6);
     }
 
     if (!events.length) {
