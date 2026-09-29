@@ -89,7 +89,10 @@ async function submitJoin(e) {
     });
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message || 'Registration failed.');
-    if (successEl) successEl.style.display = 'block';
+    if (successEl) {
+      successEl.textContent = data.message || 'Welcome to AI-GAMNET!';
+      successEl.style.display = 'block';
+    }
     e.target.reset();
   } catch (err) {
     if (errorEl) {

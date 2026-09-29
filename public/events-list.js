@@ -10,9 +10,9 @@ function fmtDateRange(start, end) {
   const e = new Date(end);
   const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
   if (sameMonth) {
-    return `${s.getDate()}–${e.getDate()} ${e.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}`;
+    return `${s.getDate()} to ${e.getDate()} ${e.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}`;
   }
-  return `${s.toLocaleDateString('en-GB', opts)} – ${e.toLocaleDateString('en-GB', opts)}`;
+  return `${s.toLocaleDateString('en-GB', opts)} to ${e.toLocaleDateString('en-GB', opts)}`;
 }
 
 function eventStatus(ev) {
@@ -57,7 +57,7 @@ async function loadEventList() {
     const data = await res.json();
     const events = (data.events || []).filter((e) => e.published);
     if (!events.length) {
-      grid.innerHTML = '<p class="empty-note">No events published yet. Check back soon — or contact us to get involved.</p>';
+      grid.innerHTML = '<p class="empty-note">No events published yet. Check back soon, or contact us to get involved.</p>';
       return;
     }
     grid.innerHTML = events.map(eventCard).join('');

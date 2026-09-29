@@ -55,7 +55,7 @@ function renderSiteHeader() {
   mount.innerHTML = `
     <nav class="navbar" id="navbar">
       <div class="nav-container">
-        <a href="/" class="nav-logo" aria-label="AI-GAMNET — Artificial Intelligence Gambia Network home">
+        <a href="/" class="nav-logo" aria-label="AI-GAMNET | Artificial Intelligence Gambia Network home">
           <img src="/images/logo.png" alt="AI-GAMNET" class="logo-img" />
         </a>
         <button type="button" class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open menu">
@@ -89,7 +89,7 @@ function renderSiteFooter() {
         <div class="footer-grid">
           <div class="footer-brand">
             <a href="/" class="footer-logo-link">
-              <img src="/images/logo.png" alt="AI-GAMNET — Artificial Intelligence Gambia Network" class="footer-logo-img" />
+              <img src="/images/logo.png" alt="AI-GAMNET | Artificial Intelligence Gambia Network" class="footer-logo-img" />
             </a>
             <p>Advancing AI, empowering society across Gambia and Africa.</p>
             <a href="mailto:info@gamainet.org" class="footer-email">info@gamainet.org</a>

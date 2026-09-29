@@ -30,8 +30,8 @@ function fmtDateRange(start, end) {
   const e = new Date(end);
   if (s.toDateString() === e.toDateString()) return s.toLocaleDateString('en-GB', opts);
   const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
-  if (sameMonth) return `${s.getDate()}–${e.getDate()} ${e.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`;
-  return `${s.toLocaleDateString('en-GB', opts)} – ${e.toLocaleDateString('en-GB', opts)}`;
+  if (sameMonth) return `${s.getDate()} to ${e.getDate()} ${e.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`;
+  return `${s.toLocaleDateString('en-GB', opts)} to ${e.toLocaleDateString('en-GB', opts)}`;
 }
 
 function renderBlocks(data) {
@@ -49,7 +49,7 @@ function renderBlocks(data) {
           return `<${tag}>${items}</${tag}>`;
         }
         case 'quote':
-          return `<blockquote>${b.data.text || ''}${b.data.caption ? `<cite>— ${b.data.caption}</cite>` : ''}</blockquote>`;
+          return `<blockquote>${b.data.text || ''}${b.data.caption ? `<cite>${b.data.caption}</cite>` : ''}</blockquote>`;
         default:
           return '';
       }
@@ -218,7 +218,7 @@ function registrationHeroBlock(ev) {
   return `
     <div class="reg-form-card reg-form-hero" id="register">
       <h3>Register free</h3>
-      <p class="reg-form-hint">Secure your spot — we'll send joining details by email.</p>
+      <p class="reg-form-hint">Secure your spot, we'll send joining details by email.</p>
       <form id="reg-form" class="contact-form reg-form-compact">
         <div class="reg-form-row">
           <div class="form-group"><input type="text" id="reg-name" required placeholder="Full name *" /></div>
@@ -462,7 +462,7 @@ async function loadEvent() {
     if (ev.shortCode && !location.pathname.startsWith('/e/')) {
       history.replaceState(null, '', eventHref(ev));
     }
-    document.title = `${ev.title} — AI-GAMNET`;
+    document.title = `${ev.title} | AI-GAMNET`;
 
     const cover = ev.coverImage || TYPE_FALLBACK_IMG[ev.type] || '/images/home/hero-feature.jpg';
     const dateStr = fmtDateRange(ev.startDate, ev.endDate);

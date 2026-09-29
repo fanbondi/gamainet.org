@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI-GAMNET — Gambia's AI Community</title>
+  <title>AI-GAMNET, Gambia's AI Community</title>
   <meta name="description" content="AI-GAMNET connects researchers, professionals, and students advancing AI across Gambia and Africa." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,7 +18,7 @@
 
   <div id="editor-toolbar" class="editor-toolbar" style="display:none;">
     <div class="editor-toolbar-inner">
-      <span class="editor-label">Edit mode — click text or images to edit</span>
+      <span class="editor-label">Edit mode, click text or images to edit</span>
       <div class="editor-actions">
         <button id="save-btn" onclick="saveContent()">Save</button>
         <button id="exit-btn" onclick="exitEditMode()">Exit</button>
@@ -50,10 +50,27 @@
         data-img-key="hero-primary"
       />
       <div class="hero-pro-banner-overlay" aria-hidden="true"></div>
-      <div id="hero-event-spotlight" class="hero-event-spotlight-wrap">
-        <div class="float-card" id="hero-float-fallback">
-          <div class="dot">🚀</div>
-          <div><strong>AI-GAMNET Events</strong><span>Webinars, meetups, IOAI &amp; IndabaX</span></div>
+      <div class="hero-banner-cards">
+        <div class="hero-event-spotlight-wrap">
+          <div id="hero-event-spotlight">
+            <div class="float-card" id="hero-float-fallback">
+              <div class="dot">🚀</div>
+              <div><strong>AI-GAMNET Events</strong><span>Webinars, meetups, IOAI &amp; IndabaX</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-jargon-spotlight" id="jargon-slider" aria-label="Tech terms">
+          <div class="hero-jargon-spotlight-row">
+            <div class="hero-jargon-dot" aria-hidden="true">💡</div>
+            <div class="hero-jargon-spotlight-body" id="jargon-panel" role="tabpanel" aria-live="polite"></div>
+          </div>
+          <div class="jargon-nav jargon-nav-compact">
+            <button type="button" class="jargon-arrow" onclick="stepJargon(-1)" aria-label="Previous term">←</button>
+            <div class="jargon-tabs-wrap">
+              <div class="jargon-tabs" id="jargon-tabs" role="tablist"></div>
+            </div>
+            <button type="button" class="jargon-arrow" onclick="stepJargon(1)" aria-label="Next term">→</button>
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +82,7 @@
         <a href="/join.html" class="btn-primary btn-lg">Join the Network</a>
         <a href="/programs.html" class="btn-outline btn-lg">Explore Programs</a>
       </div>
+
       <div class="hero-pro-meta">
         <div><span class="num editable" data-key="stat-members">70+</span><span class="lbl">Members</span></div>
         <div><span class="num editable" data-key="stat-speakers">12+</span><span class="lbl">Speakers</span></div>
@@ -83,7 +101,11 @@
         <img src="/images/partners/mrc_21.png" alt="MRC Unit The Gambia" />
         <img src="/images/partners/itca.png" alt="ITCA" />
         <img src="/images/partners/lasting.png" alt="Lasting" />
+<<<<<<< HEAD
         <img src="/images/partners/NSACB.PNG" alt="NSACB" />
+=======
+        <!-- <img src="/images/partners/zindi.png" alt="Zindi" /> -->
+>>>>>>> 9291e43270f300357529130cb455691b6c55efe9
       </div>
     </div>
   </section>
@@ -93,7 +115,7 @@
       <div class="section-header">
         <p class="section-eyebrow eyebrow-center">Don't miss out</p>
         <h2 class="section-title">Upcoming events</h2>
-        <p class="section-sub">Register for our next webinars, meetups, and conferences — free and open to the community.</p>
+        <p class="section-sub">Register for our next webinars, meetups, and conferences. All are free and open to the community.</p>
       </div>
       <div id="home-events-grid" class="event-grid"></div>
       <p style="text-align:center;margin-top:2rem;"><a href="/programs.html" class="btn-outline">View all programs</a></p>
@@ -143,6 +165,34 @@
           <a href="/join.html" class="btn-primary">Become a member</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="section ai-safety-section" style="background:var(--off-white);">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow eyebrow-center">AI safety</p>
+        <h2 class="section-title editable" data-key="home-safety-title">Our role in making AI safe for all</h2>
+        <p class="section-sub editable" data-key="home-safety-sub">AI-GAMNET stands with the worldwide push for AI that is reliable, fair, and accountable, so communities in Gambia and across Africa can adopt AI with confidence.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-ic">🛡️</div>
+          <h3 class="editable" data-key="home-safety-f1-title">Safety in practice</h3>
+          <p class="editable" data-key="home-safety-f1-body">We teach members to spot risks, test systems thoughtfully, and keep people in the loop when AI affects real lives and public services.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-ic">🌐</div>
+          <h3 class="editable" data-key="home-safety-f2-title">Global collaboration</h3>
+          <p class="editable" data-key="home-safety-f2-body">We follow and contribute to international AI safety and governance discussions, bringing African perspectives into how the world builds trustworthy AI.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-ic">🤲</div>
+          <h3 class="editable" data-key="home-safety-f3-title">Access with dignity</h3>
+          <p class="editable" data-key="home-safety-f3-body">Safe AI means inclusive AI, designed for local languages, contexts, and needs so everyone can participate, not just technical elites.</p>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:2rem;"><a href="/about.html#ai-safety" class="btn-outline">Learn more on About us</a></p>
     </div>
   </section>
 
@@ -200,7 +250,7 @@
     <div class="container">
       <div class="quote-card">
         <div class="mark">“</div>
-        <blockquote class="editable" data-key="quote-text">AI-GAMNET gave me my first real community in machine learning — the mentorship and the IndabaX experience completely changed my trajectory.</blockquote>
+        <blockquote class="editable" data-key="quote-text">AI-GAMNET gave me my first real community in machine learning, the mentorship and the IndabaX experience completely changed my trajectory.</blockquote>
         <div class="quote-author">
           <img src="/images/home/african-woman-tech.jpg" alt="Community member" data-img-key="quote-avatar" />
           <div>
@@ -228,6 +278,7 @@
   <script src="/chrome.js"></script>
   <script src="/event-url.js"></script>
   <script src="/home-events.js"></script>
+  <script src="/jargon-slider.js"></script>
   <script src="/editor.js"></script>
   <script src="/main.js"></script>
 </body>

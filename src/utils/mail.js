@@ -31,13 +31,13 @@ function fmtEventDate(start, end) {
   if (!end) return s.toLocaleDateString('en-GB', opts);
   const e = new Date(end);
   if (s.toDateString() === e.toDateString()) return s.toLocaleDateString('en-GB', opts);
-  return `${s.toLocaleDateString('en-GB', opts)} – ${e.toLocaleDateString('en-GB', opts)}`;
+  return `${s.toLocaleDateString('en-GB', opts)} to ${e.toLocaleDateString('en-GB', opts)}`;
 }
 
 async function sendRegistrationConfirmation({ to, name, event }) {
   const transport = getTransporter();
   if (!transport) {
-    console.warn(`SMTP not configured — skipping registration email to ${to}`);
+    console.warn(`SMTP not configured, skipping registration email to ${to}`);
     return false;
   }
 
@@ -49,7 +49,7 @@ async function sendRegistrationConfirmation({ to, name, event }) {
   const siteBase = process.env.SITE_URL || 'https://gamainet.org';
   const eventUrl = `${siteBase}${eventPublicPath(event)}`;
 
-  const subject = `You're registered — ${event.title}`;
+  const subject = `You're registered, ${event.title}`;
   const text = [
     `Hi ${name},`,
     '',
@@ -62,12 +62,12 @@ async function sendRegistrationConfirmation({ to, name, event }) {
     meetLink ? `Join link: ${meetLink}` : '',
     '',
     meetLink
-      ? 'Save the link above — use it to join on the day.'
+      ? 'Save the link above, use it to join on the day.'
       : 'We will send joining details closer to the event if needed.',
     '',
     'Questions? Reply to this email or contact info@gamainet.org',
     '',
-    '— AI-GAMNET / Gamainet.org',
+    '| AI-GAMNET / Gamainet.org',
   ]
     .filter(Boolean)
     .join('\n');
@@ -89,7 +89,40 @@ async function sendRegistrationConfirmation({ to, name, event }) {
           : '<p>We will share joining details closer to the event if needed.</p>'
       }
       <p style="margin-top:1.5rem;font-size:0.9rem;color:#64748b;">Questions? Contact <a href="mailto:info@gamainet.org">info@gamainet.org</a></p>
-      <p style="font-size:0.85rem;color:#94a3b8;">— AI-GAMNET / Gamainet.org</p>
+      <p style="font-size:0.85rem;color:#94a3b8;">| AI-GAMNET / Gamainet.org</p>
+    </div>`;
+
+  await transport.sendMail({ from, to, subject, text, html });
+  return true;
+}
+
+async function sendMembershipConfirmation({ to, name }) {
+  const transport = getTransporter();
+  if (!transport) {
+    console.warn(`SMTP not configured, skipping membership email to ${to}`);
+    return false;
+  }
+
+  const from = process.env.MAIL_FROM || process.env.SMTP_USER || 'info@gamainet.org';
+  const subject = 'Welcome to AI-GAMNET';
+  const text = [
+    `Hi ${name},`,
+    '',
+    'Thank you for joining AI-GAMNET. Your community registration was successful.',
+    '',
+    'We are delighted to have you in Gambia\'s AI community and will keep you informed about upcoming events, learning opportunities, and ways to get involved.',
+    '',
+    'Questions? Reply to this email or contact info@gamainet.org',
+    '',
+    '| AI-GAMNET / Gamainet.org',
+  ].join('\n');
+  const html = `
+    <div style="font-family:Inter,Arial,sans-serif;max-width:560px;color:#0f172a;line-height:1.6;">
+      <p>Hi ${escapeHtml(name)},</p>
+      <p>Thank you for joining <strong>AI-GAMNET</strong>. Your community registration was successful.</p>
+      <p>We are delighted to have you in Gambia's AI community and will keep you informed about upcoming events, learning opportunities, and ways to get involved.</p>
+      <p style="margin-top:1.5rem;font-size:0.9rem;color:#64748b;">Questions? Contact <a href="mailto:info@gamainet.org">info@gamainet.org</a></p>
+      <p style="font-size:0.85rem;color:#94a3b8;">| AI-GAMNET / Gamainet.org</p>
     </div>`;
 
   await transport.sendMail({ from, to, subject, text, html });
@@ -104,4 +137,4 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
-module.exports = { sendRegistrationConfirmation, isMailConfigured };
+module.exports = { sendRegistrationConfirmation, sendMembershipConfirmation, isMailConfigured };

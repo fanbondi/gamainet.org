@@ -10,6 +10,7 @@ const {
   ensureUniqueShortCode,
   eventLookupFilter,
 } = require('../utils/event-codes');
+const { sortEventsForDisplay } = require('../utils/event-sort');
 
 const router = express.Router();
 
@@ -32,14 +33,17 @@ router.get('/', async (req, res) => {
     if (req.query.upcoming === 'true') {
       const now = new Date();
       now.setHours(0, 0, 0, 0);
-      filter.$or = [{ startDate: { $gte: now } }, { endDate: { $gte: now } }];
+      filter.$or = [
+        { startDate: { $gte: now } },
+        { endDate: { $gte: now } },
+        { startDate: null },
+        { startDate: { $exists: false } },
+      ];
     }
     if (!isAdmin(req)) filter.published = true;
 
-    const upcoming = req.query.upcoming === 'true';
-    const events = await ProgramEvent.find(filter)
-      .sort(upcoming ? { startDate: 1, year: 1, createdAt: -1 } : { startDate: -1, year: -1, createdAt: -1 })
-      .lean();
+    let events = await ProgramEvent.find(filter).lean();
+    events = sortEventsForDisplay(events);
 
     res.json({ success: true, events });
   } catch (err) {

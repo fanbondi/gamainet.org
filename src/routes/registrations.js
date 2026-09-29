@@ -3,6 +3,9 @@ const ProgramEvent = require('../models/ProgramEvent');
 const Registration = require('../models/Registration');
 const { requireAuth } = require('../middleware/auth');
 const { sendRegistrationConfirmation } = require('../utils/mail');
+const { createRateLimiter, isSingleEmailAddress, normalizeEmailAddress } = require('../utils/email-validation');
+
+const registrationRateLimiter = createRateLimiter({ windowMs: 60_000, max: 5 });
 
 const router = express.Router();
 
@@ -18,6 +21,14 @@ router.post('/', async (req, res) => {
         .json({ success: false, message: 'Event, name, and email are required.' });
     }
 
+    const clientIp = String(req.ip || req.headers['x-forwarded-for'] || 'unknown').trim() || 'unknown';
+    if (!registrationRateLimiter(clientIp)) {
+      return res.status(429).json({
+        success: false,
+        message: 'Too many registration attempts. Please wait a minute and try again.',
+      });
+    }
+
     const event = await ProgramEvent.findById(eventId).lean();
     if (!event || !event.published) {
       return res.status(404).json({ success: false, message: 'Event not found.' });
@@ -27,7 +38,10 @@ router.post('/', async (req, res) => {
     }
 
     const trimmedName = String(name).trim();
-    const trimmedEmail = String(email).toLowerCase().trim();
+    const trimmedEmail = normalizeEmailAddress(email);
+    if (!isSingleEmailAddress(trimmedEmail)) {
+      return res.status(400).json({ success: false, message: 'Please provide a valid email address.' });
+    }
 
     await Registration.create({
       event: event._id,
@@ -82,6 +96,64 @@ router.get('/', requireAuth, async (req, res) => {
     res.json({ success: true, registrations, count: registrations.length });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to load registrations.' });
+  }
+});
+
+// PUT /api/registrations/:id — admin update registrant
+router.put('/:id', requireAuth, async (req, res) => {
+  try {
+    const { name, email, organisation, role, phone, notes } = req.body;
+    const reg = await Registration.findById(req.params.id);
+    if (!reg) {
+      return res.status(404).json({ success: false, message: 'Registration not found.' });
+    }
+
+    if (name !== undefined) {
+      const trimmedName = String(name).trim();
+      if (!trimmedName) {
+        return res.status(400).json({ success: false, message: 'Name is required.' });
+      }
+      reg.name = trimmedName;
+    }
+
+    if (email !== undefined) {
+      const trimmedEmail = normalizeEmailAddress(email);
+      if (!isSingleEmailAddress(trimmedEmail)) {
+        return res.status(400).json({ success: false, message: 'Please provide a valid email address.' });
+      }
+      reg.email = trimmedEmail;
+    }
+
+    if (organisation !== undefined) reg.organisation = String(organisation).trim();
+    if (role !== undefined) reg.role = String(role).trim();
+    if (phone !== undefined) reg.phone = String(phone).trim();
+    if (notes !== undefined) reg.notes = String(notes).trim();
+
+    await reg.save();
+    res.json({ success: true, registration: reg.toObject() });
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: 'Another registration for this event already uses that email.',
+      });
+    }
+    console.error('PUT /api/registrations/:id error:', err);
+    res.status(500).json({ success: false, message: 'Failed to update registration.' });
+  }
+});
+
+// DELETE /api/registrations/:id — admin remove registrant
+router.delete('/:id', requireAuth, async (req, res) => {
+  try {
+    const reg = await Registration.findByIdAndDelete(req.params.id);
+    if (!reg) {
+      return res.status(404).json({ success: false, message: 'Registration not found.' });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('DELETE /api/registrations/:id error:', err);
+    res.status(500).json({ success: false, message: 'Failed to delete registration.' });
   }
 });
 
