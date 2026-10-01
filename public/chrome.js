@@ -1,5 +1,7 @@
 const SITE_NAV = [
   { href: '/', label: 'Home', match: (p) => p === '/' || p === '/index.html' },
+  { href: '/about.html', label: 'About' },
+  { href: '/ai-in-gambia.html', label: 'AI in Gambia' },
   {
     href: '/programs.html',
     label: 'Programs',
@@ -12,9 +14,7 @@ const SITE_NAV = [
       { href: '/webinars.html', label: 'Webinars' },
     ],
   },
-  { href: '/ai-in-gambia.html', label: 'AI in Gambia' },
   { href: '/blog.html', label: 'Blog', match: (p) => p.startsWith('/blog') },
-  { href: '/about.html', label: 'About' },
   { href: '/join.html', label: 'Join', hideOnEventPages: true },
   { href: '/contact.html', label: 'Contact' },
 ];
