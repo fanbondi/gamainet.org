@@ -32,8 +32,8 @@
   <section class="section" style="background:var(--white);">
     <div class="container">
       <p class="section-eyebrow">Current edition</p>
-      <h2>NASA Space Apps Challenge 2026</h2>
-      <p>The 2026 hackathon is scheduled for <strong>November 14-15, 2026</strong>, with the theme <strong>The Next Frontier</strong>. Participants register through the official Space Apps website, choose a Local Event or the virtual Universal Event, and form or join a team of up to six people.</p>
+      <h2>NASA Space Apps Challenge <span id="space-apps-year"></span></h2>
+      <p>The hackathon is scheduled for <strong>November 14-15, 2026</strong>, with the theme <strong>The Next Frontier</strong>. Participants register through the official Space Apps website, choose a Local Event or the virtual Universal Event, and form or join a team of up to six people.</p>
       <ul class="check-list">
         <li>Explore the challenge statements and choose one that interests your team.</li>
         <li>Work together during the hackathon using NASA and partner-agency open data.</li>
@@ -41,7 +41,7 @@
       </ul>
       <p>Local event availability changes by edition. Check the official event directory for a location in The Gambia. If there is no suitable nearby event, the official site lists a virtual Universal Event option.</p>
       <div class="cta-actions">
-        <a href="https://www.spaceappschallenge.org/2026/" class="btn-primary" target="_blank" rel="noopener noreferrer">2026 Challenge and Registration</a>
+        <a href="https://www.spaceappschallenge.org/2026/" class="btn-primary" target="_blank" rel="noopener noreferrer">Challenge and Registration</a>
         <a href="https://www.spaceappschallenge.org/2026/local-events/" class="btn-outline" target="_blank" rel="noopener noreferrer">Find a Local or Virtual Event</a>
       </div>
     </div>
@@ -61,6 +61,9 @@
   </section>
 
   <div id="site-footer"></div>
+  <script>
+    document.getElementById('space-apps-year').textContent = new Date().getFullYear();
+  </script>
   <script src="/chrome.js"></script>
   <script src="/main.js"></script>
 </body>

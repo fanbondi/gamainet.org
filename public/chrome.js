@@ -1,4 +1,4 @@
-const SITE_NAV = [
+﻿const SITE_NAV = [
   { href: '/', label: 'Home', match: (p) => p === '/' || p === '/index.html' },
   { href: '/about.html', label: 'About' },
   { href: '/ai-in-gambia.html', label: 'AI in Gambia' },
@@ -98,7 +98,7 @@ function renderSiteFooter() {
             <h4>Explore</h4>
             <ul>
               <li><a href="/programs.html">Programs</a></li>
-              <li><a href="/ioai.html">IOAI competition</a></li>
+              <li><a href="/programs.html#competitions">Competitions</a></li>
               <li><a href="/blog.html">Blog</a></li>
               <li><a href="/about.html">About</a></li>
               ${joinLink}
