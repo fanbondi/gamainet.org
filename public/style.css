@@ -860,6 +860,8 @@ body.edit-mode .editable:focus { outline: 2px solid var(--accent); background: r
   padding: 2rem;
   transition: var(--transition);
 }
+.feature-card-outline { border-color: var(--primary); }
+
 .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
 .feature-ic {
   width: 56px; height: 56px; border-radius: 14px;

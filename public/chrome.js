@@ -1,15 +1,15 @@
-const SITE_NAV = [
+﻿const SITE_NAV = [
   { href: '/', label: 'Home', match: (p) => p === '/' || p === '/index.html' },
   { href: '/about.html', label: 'About' },
   { href: '/ai-in-gambia.html', label: 'AI in Gambia' },
   {
     href: '/programs.html',
     label: 'Programs',
-    match: (p) => ['/programs', '/indabax', '/ioai', '/meetups', '/webinars', '/event'].some((x) => p.startsWith(x)),
+    match: (p) => ['/programs', '/indabax', '/ioai', '/nsac', '/zindi', '/meetups', '/webinars', '/event'].some((x) => p.startsWith(x)),
     children: [
       { href: '/programs.html', label: 'All programs' },
       { href: '/indabax.html', label: 'IndabaX' },
-      { href: '/ioai.html', label: 'IOAI competition' },
+      { href: '/programs.html#competitions', label: 'Competitions' },
       { href: '/meetups.html', label: 'Meetups' },
       { href: '/webinars.html', label: 'Webinars' },
     ],
@@ -47,7 +47,7 @@ function renderSiteHeader() {
       const sub = item.children
         .map((c) => `<li><a href="${c.href}"${path === c.href ? ' class="active"' : ''}>${c.label}</a></li>`)
         .join('');
-      return `<li class="has-dropdown"><a href="${item.href}" class="nav-top${active}">${item.label} <span class="caret">▾</span></a><ul class="dropdown">${sub}</ul></li>`;
+      return `<li class="has-dropdown"><a href="${item.href}" class="nav-top${active}">${item.label} <span class="caret">&#9662;</span></a><ul class="dropdown">${sub}</ul></li>`;
     }
     return `<li><a href="${item.href}" class="nav-top${active}">${item.label}</a></li>`;
   }).join('');
@@ -98,7 +98,7 @@ function renderSiteFooter() {
             <h4>Explore</h4>
             <ul>
               <li><a href="/programs.html">Programs</a></li>
-              <li><a href="/ioai.html">IOAI competition</a></li>
+              <li><a href="/programs.html#competitions">Competitions</a></li>
               <li><a href="/blog.html">Blog</a></li>
               <li><a href="/about.html">About</a></li>
               ${joinLink}
@@ -113,7 +113,7 @@ function renderSiteFooter() {
             </ul>
           </div>
         </div>
-        <p class="footer-copy">© ${new Date().getFullYear()} AI-GAMNET</p>
+        <p class="footer-copy">&copy; ${new Date().getFullYear()} AI-GAMNET</p>
       </div>
     </footer>`;
 }
@@ -122,3 +122,4 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSiteHeader();
   renderSiteFooter();
 });
+
