@@ -1,11 +1,12 @@
 async function loadBlogList() {
   const el = document.getElementById('blog-list');
   if (!el) return;
+  const submissionNote = "\u003cp class=\"blog-submission-note\" style=\"margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--gray-200);color:var(--gray-600)\"\u003eHave a <strong>blog</strong> post to share? Email it to \u003ca href=\"mailto:mljagne22@gmail.com\" style=\"display:inline;padding:0;border:0;background:transparent;color:var(--primary)\"\u003emljagne22@gmail.com\u003c/a\u003e for review.\u003c/p\u003e";
   try {
     const res = await fetch('/api/blog');
     const data = await res.json();
     if (!data.success || !data.posts?.length) {
-      el.innerHTML = '<p>No posts yet. Check back soon.</p>';
+      el.innerHTML = '<p>No posts yet. Check back soon.</p>' + submissionNote;
       return;
     }
     const byYear = {};
@@ -28,9 +29,9 @@ async function loadBlogList() {
         )
         .join('')}`
       )
-      .join('');
+      .join('') + submissionNote;
   } catch {
-    el.innerHTML = '<p>Could not load posts.</p>';
+    el.innerHTML = '<p>Could not load posts.</p>' + submissionNote;
   }
 }
 
