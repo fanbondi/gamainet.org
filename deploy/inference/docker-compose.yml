@@ -1,0 +1,141 @@
+# AI-GAMNET inference stack: vLLM (Ascend NPU) + Open WebUI
+#
+# See README.md and .env.example in this directory.
+#
+# Quick start:
+#   cp .env.example .env
+#   docker compose --profile ascend-910b up -d    # Atlas 910B / 800I A2
+#   docker compose --profile ascend-310p up -d    # Atlas 300I (310P)
+
+services:
+  vllm-910b:
+    profiles: [ascend-910b]
+    image: ${VLLM_ASCEND_IMAGE_910B:-quay.io/ascend/vllm-ascend:v0.10.0rc1}
+    container_name: aigamnet-vllm-910b
+    restart: unless-stopped
+    shm_size: ${VLLM_SHM_SIZE:-1g}
+    ports:
+      - "${VLLM_PORT:-8000}:8000"
+    devices:
+      - ${ASCEND_DEVICE_910B:-/dev/davinci0}:/dev/davinci0
+      - /dev/davinci_manager:/dev/davinci_manager
+      - /dev/devmm_svm:/dev/devmm_svm
+      - /dev/hisi_hdc:/dev/hisi_hdc
+    volumes:
+      - /usr/local/dcmi:/usr/local/dcmi:ro
+      - /usr/local/bin/npu-smi:/usr/local/bin/npu-smi:ro
+      - /usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64:ro
+      - /usr/local/Ascend/driver/version.info:/usr/local/Ascend/driver/version.info:ro
+      - /etc/ascend_install.info:/etc/ascend_install.info:ro
+      - model-cache:/root/.cache
+    environment:
+      VLLM_USE_MODELSCOPE: ${VLLM_USE_MODELSCOPE:-false}
+      PYTORCH_NPU_ALLOC_CONF: ${PYTORCH_NPU_ALLOC_CONF:-max_split_size_mb:256}
+      HF_HOME: /root/.cache/huggingface
+    networks:
+      inference:
+        aliases: [vllm]
+    command:
+      - vllm
+      - serve
+      - ${VLLM_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8000"
+      - --max-model-len
+      - ${VLLM_MAX_MODEL_LEN_910B:-8192}
+      - --tensor-parallel-size
+      - ${VLLM_TENSOR_PARALLEL_910B:-1}
+      - --dtype
+      - ${VLLM_DTYPE_910B:-auto}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/v1/models || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 300s
+
+  vllm-310p:
+    profiles: [ascend-310p]
+    image: ${VLLM_ASCEND_IMAGE_310P:-quay.io/ascend/vllm-ascend:v0.10.0rc1-310p}
+    container_name: aigamnet-vllm-310p
+    restart: unless-stopped
+    shm_size: ${VLLM_SHM_SIZE:-1g}
+    ports:
+      - "${VLLM_PORT:-8000}:8000"
+    devices:
+      - ${ASCEND_DEVICE_310P_0:-/dev/davinci0}:/dev/davinci0
+      - ${ASCEND_DEVICE_310P_1:-/dev/davinci1}:/dev/davinci1
+      - /dev/davinci_manager:/dev/davinci_manager
+      - /dev/devmm_svm:/dev/devmm_svm
+      - /dev/hisi_hdc:/dev/hisi_hdc
+    volumes:
+      - /usr/local/dcmi:/usr/local/dcmi:ro
+      - /usr/local/bin/npu-smi:/usr/local/bin/npu-smi:ro
+      - /usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64:ro
+      - /usr/local/Ascend/driver/version.info:/usr/local/Ascend/driver/version.info:ro
+      - /etc/ascend_install.info:/etc/ascend_install.info:ro
+      - model-cache:/root/.cache
+    environment:
+      VLLM_USE_MODELSCOPE: ${VLLM_USE_MODELSCOPE:-false}
+      PYTORCH_NPU_ALLOC_CONF: ${PYTORCH_NPU_ALLOC_CONF:-max_split_size_mb:256}
+      HF_HOME: /root/.cache/huggingface
+    networks:
+      inference:
+        aliases: [vllm]
+    command:
+      - vllm
+      - serve
+      - ${VLLM_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8000"
+      - --max-model-len
+      - ${VLLM_MAX_MODEL_LEN_310P:-4096}
+      - --tensor-parallel-size
+      - ${VLLM_TENSOR_PARALLEL_310P:-2}
+      - --enforce-eager
+      - --dtype
+      - float16
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/v1/models || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 300s
+
+  open-webui:
+    profiles: [ascend-910b, ascend-310p]
+    image: ${OPEN_WEBUI_IMAGE:-ghcr.io/open-webui/open-webui:main}
+    container_name: aigamnet-open-webui
+    restart: unless-stopped
+    ports:
+      - "${OPEN_WEBUI_PORT:-3000}:8080"
+    volumes:
+      - open-webui-data:/app/backend/data
+    environment:
+      OPENAI_API_BASE_URL: http://vllm:8000/v1
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-local}
+      WEBUI_NAME: ${WEBUI_NAME:-AI-GAMNET Inference}
+      ENABLE_SIGNUP: ${ENABLE_SIGNUP:-true}
+    networks:
+      - inference
+    depends_on:
+      vllm-910b:
+        condition: service_healthy
+        required: false
+      vllm-310p:
+        condition: service_healthy
+        required: false
+
+networks:
+  inference:
+    name: aigamnet-inference
+
+volumes:
+  model-cache:
+    name: aigamnet-model-cache
+  open-webui-data:
+    name: aigamnet-open-webui-data

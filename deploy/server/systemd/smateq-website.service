@@ -1,0 +1,20 @@
+[Unit]
+Description=SMATEQ Group Website (Express + MongoDB)
+After=network-online.target mongod.service
+Wants=network-online.target mongod.service
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/smateq.gm
+EnvironmentFile=/var/www/smateq.gm/.env
+Environment=NODE_ENV=production
+ExecStartPre=/usr/local/bin/gamainet-wait-for-mongo.sh
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

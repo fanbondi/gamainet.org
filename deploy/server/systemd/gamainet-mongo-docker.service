@@ -1,0 +1,16 @@
+[Unit]
+Description=MongoDB for gamainet/smateq (Docker, host data dir)
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/docker start gamainet-mongo
+ExecStart=/bin/bash -c '/usr/bin/docker inspect gamainet-mongo >/dev/null 2>&1 || /usr/bin/docker run -d --name gamainet-mongo --restart unless-stopped -v /var/lib/mongodb:/data/db -p 127.0.0.1:27017:27017 mongo:7.0 mongod --bind_ip_all'
+ExecStop=/usr/bin/docker stop gamainet-mongo
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target
